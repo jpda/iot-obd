@@ -11,9 +11,14 @@ using Windows.Storage.Streams;
 
 namespace Coding4Fun.Obd.ObdManager.Universal
 {
-    class ObdUwpBluetooth : ObdPort
+    class ObdUwpBluetooth: ObdPort
     {
         protected override ObdResponse GetPidData(int mode, int pid)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override ObdResponse RequestPid(ObdRequest req)
         {
             throw new NotImplementedException();
         }
