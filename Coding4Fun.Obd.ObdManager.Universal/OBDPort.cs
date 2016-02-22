@@ -1,21 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Coding4Fun.Obd.ObdManager.Universal
+﻿namespace Coding4Fun.Obd.ObdManager.Universal
 {
-    public abstract class ObdPort
+    public abstract class ObdPort : TelemetryBase
     {
         private Dictionary<int, List<int>> _supportedPids = new Dictionary<int, List<int>>();
         public virtual void Connect()
         {
-            this.Connected = true;
+            Connected = true;
         }
+
         public virtual void Disconnect()
         {
-            this.Connected = false;
+            Connected = false;
         }
+
         public Protocol Protocol { get; set; }
+
         public bool Connected { get; protected set; }
+
         public ObdResponse GetPidData(ObdRequest req)
         {
             return (ObdResponse)GetPidData(req.Mode, req.Pid);

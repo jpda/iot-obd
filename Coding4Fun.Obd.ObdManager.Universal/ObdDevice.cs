@@ -1,10 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using Windows.Devices.SerialCommunication;
-
-using System.Threading;
-using Coding4Fun.Obd.ObdManager.Universal;
 
 namespace Coding4Fun.Obd.ObdManager.Universal
 {
@@ -15,18 +9,18 @@ namespace Coding4Fun.Obd.ObdManager.Universal
         private Dictionary<int, List<int>> _supportedPids = new Dictionary<int, List<int>>();
         private int _currentEcu;
         public const int UnsupportedPidValue = -1;
-
+       
         public void Connect(ObdPort obdport)
         {
-            this.ObdPort = obdport;
+            ObdPort = obdport;
             Connect();
         }
         private void Connect()
         {
             ObdPort.Connect();
-            if (Convert.ToInt32(this.ObdPort.Protocol) > 9 || this.ObdPort.Protocol != Protocol.Unknown)
-                throw new ArgumentOutOfRangeException(this.ObdPort.Protocol.ToString(), "Protocol must be a value between of known type Int(1 and 9), inclusive.");
-            if (this.ObdPort == null)
+            if (Convert.ToInt32(ObdPort.Protocol) > 9 || ObdPort.Protocol != Protocol.Unknown)
+                throw new ArgumentOutOfRangeException(ObdPort.Protocol.ToString(), "Protocol must be a value between of known type Int(1 and 9), inclusive.");
+            if (ObdPort == null)
             {
                 throw new ObdException("OBDPort not speficied.");
             }
@@ -36,17 +30,20 @@ namespace Coding4Fun.Obd.ObdManager.Universal
                 FireConnectionChangedEvent(this.ObdPort.Connected);
             }
             
+            ObdPort.Connect();
+            FireConnectionChangedEvent(ObdPort.Connected);
+
         }
         public void Disconnect()
         {
             ObdPort.Disconnect();
-            FireConnectionChangedEvent(this.ObdPort.Connected);
+            FireConnectionChangedEvent(ObdPort.Connected);
         }
 
         public Dictionary<int, List<int>> GetSupportedPids()
         {
             Dictionary<int, List<int>> supportedPids = new Dictionary<int, List<int>>();
-
+        
             var result = this.ObdPort.GetPidData(0x01, 0x00);
             foreach (var payload in result)
                 supportedPids[payload.Key] = DecodeSupportedPids(payload.Value, 0x00);
@@ -80,7 +77,7 @@ namespace Coding4Fun.Obd.ObdManager.Universal
         }
         public ObdState GetCurrentState()
         {
-            ObdState os = new ObdState();
+            var os = new ObdState();
             //run the object builder routine. 
 
             return os;
@@ -97,8 +94,7 @@ namespace Coding4Fun.Obd.ObdManager.Universal
         }
 		private void FireConnectionChangedEvent(bool connected)
 		{
-			if(ObdConnectionChanged != null)
-				ObdConnectionChanged(this, new ConnectionChangedEventArgs { Connected = connected });
+            ObdConnectionChanged?.Invoke(this, new ConnectionChangedEventArgs { Connected = connected });
 		}
 
         public double GetKilometersPerGallon(int kph, double massAirflow)

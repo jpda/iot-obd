@@ -107,21 +107,19 @@
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Scratch code.txt" />
     <Compile Include="ConnectionChangedEventArgs.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="Extensions.cs" />
-    <Content Include="ObdDeviceold.txt" />
-    <Compile Include="OBDPort.cs" />
+    <Compile Include="ObdPort.cs" />
     <Compile Include="ObdChangedEventArgs.cs" />
     <Compile Include="ObdRequest.cs" />
     <Compile Include="ObdResponse.cs" />
-    <Compile Include="OBDSerialPort.cs" />
+    <Compile Include="ObdSerialPort.cs" />
     <Compile Include="ObdDevice.cs" />
     <Compile Include="ObdException.cs" />
     <Compile Include="ObdHelpers.cs" />
     <Compile Include="ObdState.cs" />
-    <Compile Include="ObdUwpBluetooth.cs" />
+    <Compile Include="Bluetooth\ObdBluetoothPort.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Properties\Coding4Fun.Obd.ObdManager.Universal.rd.xml" />
   </ItemGroup>
@@ -129,6 +127,9 @@
     <SDKReference Include="WindowsIoT, Version=10.0.10586.0">
       <Name>Windows IoT Extensions for the UWP</Name>
     </SDKReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Scratch code.txt" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
