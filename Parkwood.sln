@@ -5,6 +5,11 @@ VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Parkwood", "Parkwood\Parkwood.csproj", "{B0B44A47-CCFE-4FBA-92E0-A970612DB06B}"
 EndProject
+<<<<<<< HEAD
+=======
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Coding4Fun.Obd.ObdManager", "Coding4Fun.Obd.ObdManager\Coding4Fun.Obd.ObdManager.csproj", "{1EEB3342-48D0-48C8-B492-548CCAE6918E}"
+EndProject
+>>>>>>> 11f677c9364bd7bf04022f185b2b3fe907c6700b
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Coding4Fun.Obd.ObdManager.Universal", "Coding4Fun.Obd.ObdManager.Universal\Coding4Fun.Obd.ObdManager.Universal.csproj", "{1A5D7481-CFC5-44DB-ABDA-575F076FF9A3}"
 EndProject
 Global
@@ -39,6 +44,25 @@ Global
 		{B0B44A47-CCFE-4FBA-92E0-A970612DB06B}.Release|x86.ActiveCfg = Release|x86
 		{B0B44A47-CCFE-4FBA-92E0-A970612DB06B}.Release|x86.Build.0 = Release|x86
 		{B0B44A47-CCFE-4FBA-92E0-A970612DB06B}.Release|x86.Deploy.0 = Release|x86
+<<<<<<< HEAD
+=======
+		{1EEB3342-48D0-48C8-B492-548CCAE6918E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1EEB3342-48D0-48C8-B492-548CCAE6918E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1EEB3342-48D0-48C8-B492-548CCAE6918E}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{1EEB3342-48D0-48C8-B492-548CCAE6918E}.Debug|ARM.Build.0 = Debug|Any CPU
+		{1EEB3342-48D0-48C8-B492-548CCAE6918E}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{1EEB3342-48D0-48C8-B492-548CCAE6918E}.Debug|x64.Build.0 = Debug|Any CPU
+		{1EEB3342-48D0-48C8-B492-548CCAE6918E}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{1EEB3342-48D0-48C8-B492-548CCAE6918E}.Debug|x86.Build.0 = Debug|Any CPU
+		{1EEB3342-48D0-48C8-B492-548CCAE6918E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1EEB3342-48D0-48C8-B492-548CCAE6918E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1EEB3342-48D0-48C8-B492-548CCAE6918E}.Release|ARM.ActiveCfg = Release|Any CPU
+		{1EEB3342-48D0-48C8-B492-548CCAE6918E}.Release|ARM.Build.0 = Release|Any CPU
+		{1EEB3342-48D0-48C8-B492-548CCAE6918E}.Release|x64.ActiveCfg = Release|Any CPU
+		{1EEB3342-48D0-48C8-B492-548CCAE6918E}.Release|x64.Build.0 = Release|Any CPU
+		{1EEB3342-48D0-48C8-B492-548CCAE6918E}.Release|x86.ActiveCfg = Release|Any CPU
+		{1EEB3342-48D0-48C8-B492-548CCAE6918E}.Release|x86.Build.0 = Release|Any CPU
+>>>>>>> 11f677c9364bd7bf04022f185b2b3fe907c6700b
 		{1A5D7481-CFC5-44DB-ABDA-575F076FF9A3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{1A5D7481-CFC5-44DB-ABDA-575F076FF9A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1A5D7481-CFC5-44DB-ABDA-575F076FF9A3}.Debug|ARM.ActiveCfg = Debug|ARM
