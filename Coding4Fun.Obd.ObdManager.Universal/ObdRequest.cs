@@ -6,7 +6,14 @@ using System.Threading.Tasks;
 
 namespace Coding4Fun.Obd.ObdManager.Universal
 {
-    public class ObdRequest
+    public struct ObdRequest
     {
+        public ObdRequest(int mode, int pid)
+        {
+            this.Pid = pid;
+            this.Mode = mode;
+        }
+        public int Mode;
+        public int Pid; 
     }
 }

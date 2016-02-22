@@ -14,13 +14,12 @@ using System.Collections.ObjectModel;
 using Windows.Storage.Streams;
 using System.Threading.Tasks;
 using Windows.Devices.SerialCommunication;
-using Coding4Fun.Obd.ObdManager.Universal;
 
 
 
-namespace Coding4Fun.Obd.ObdManager
+namespace Coding4Fun.Obd.ObdManager.Universal
 {
-    class OBDSerialPort : ObdPort
+    public class OBDSerialPort : ObdPort
     {
         private SerialDevice  _serial;
        
