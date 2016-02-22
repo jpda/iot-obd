@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Coding4Fun.Obd.ObdManager.Universal
 {
@@ -11,20 +9,25 @@ namespace Coding4Fun.Obd.ObdManager.Universal
         {
             this.Connected = true;
         }
+
         public virtual void Disconnect()
         {
             this.Connected = false;
         }
+
         public Protocol Protocol { get; set; }
+
         public bool Connected { get; protected set; }
+
         public abstract ObdResponse RequestPid(ObdRequest req);
+
         internal ObdResponse GetPidData(ObdRequest req)
         {
             return new ObdResponse();
         }
         internal Dictionary<int, byte[]> GetPidData(byte mode, byte pid)
         {
-            if (!_connected)
+            if (!Connected)
                 return null;
 
             Dictionary<int, byte[]> payload = new Dictionary<int, byte[]>();

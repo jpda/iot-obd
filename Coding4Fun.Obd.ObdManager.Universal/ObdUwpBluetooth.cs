@@ -11,7 +11,7 @@ using Windows.Storage.Streams;
 
 namespace Coding4Fun.Obd.ObdManager.Universal
 {
-    class ObdUwpBluetooth: ObdPort
+    public class ObdUwpBluetooth: ObdPort
     {
         async void InitializeRfcommDeviceService()
         {
@@ -261,6 +261,11 @@ namespace Coding4Fun.Obd.ObdManager.Universal
                     ReadCancellationTokenSource.Cancel();
                 }
             }
+        }
+
+        public override ObdResponse RequestPid(ObdRequest req)
+        {
+            throw new NotImplementedException();
         }
     }
 }
