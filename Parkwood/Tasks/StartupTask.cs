@@ -26,11 +26,13 @@ namespace Parkwood.Tasks
             //
             // Call asynchronous method(s) using the await keyword.
             //
-            ObdDevice od = new ObdDevice();
-            OBDSerialPort osp = new OBDSerialPort();
-            osp.
-            od.Connect(obdp);
-            od.GetCurrentState().ToJson();
+            ////ObdDevice od = new ObdDevice();
+            ////OBDSerialPort osp = new OBDSerialPort();
+            //////fill in parameters for serial port
+
+            ////od.Connect(obdp);
+            ////get the state
+            //od.GetCurrentState().ToJson();
 
             //
             // Once the asynchronous method(s) are done, close the deferral.

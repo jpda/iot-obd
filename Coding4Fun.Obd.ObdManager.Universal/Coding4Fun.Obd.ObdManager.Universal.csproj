@@ -107,6 +107,7 @@
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Scratch code.txt" />
     <Compile Include="ConnectionChangedEventArgs.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="Extensions.cs" />

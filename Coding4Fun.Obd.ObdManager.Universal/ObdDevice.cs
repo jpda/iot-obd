@@ -51,7 +51,6 @@ namespace Coding4Fun.Obd.ObdManager.Universal
         public ObdResponse GetPidData(ObdRequest req)
         {
             return this.ObdPort.GetPidData(req);
-            
         }
         public ObdResponse Ping()
 		{

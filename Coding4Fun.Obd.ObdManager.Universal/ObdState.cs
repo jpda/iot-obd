@@ -1,6 +1,7 @@
 using System.Text;
 using System;
 
+using System.Reflection;
 using Coding4Fun.Obd.ObdManager.Universal;
 
 namespace Coding4Fun.Obd.ObdManager
