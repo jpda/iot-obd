@@ -119,7 +119,7 @@
     <Compile Include="ObdException.cs" />
     <Compile Include="ObdHelpers.cs" />
     <Compile Include="ObdState.cs" />
-    <Compile Include="ObdUwpBluetooth.cs" />
+    <Compile Include="Bluetooth\ObdBluetoothPort.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Properties\Coding4Fun.Obd.ObdManager.Universal.rd.xml" />
   </ItemGroup>
@@ -127,6 +127,9 @@
     <SDKReference Include="WindowsIoT, Version=10.0.10586.0">
       <Name>Windows IoT Extensions for the UWP</Name>
     </SDKReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Scratch code.txt" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
