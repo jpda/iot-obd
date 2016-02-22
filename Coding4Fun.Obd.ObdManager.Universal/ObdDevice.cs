@@ -9,27 +9,27 @@ namespace Coding4Fun.Obd.ObdManager.Universal
 
         public void Connect(ObdPort obdport)
         {
-            this.ObdPort = obdport;
+            ObdPort = obdport;
             Connect();
         }
         private void Connect()
         {
             ObdPort.Connect();
-            if (Convert.ToInt32(this.ObdPort.Protocol) > 9 || this.ObdPort.Protocol != Protocol.Unknown)
-                throw new ArgumentOutOfRangeException(this.ObdPort.Protocol.ToString(), "Protocol must be a value between of known type Int(1 and 9), inclusive.");
-            if (this.ObdPort == null)
+            if (Convert.ToInt32(ObdPort.Protocol) > 9 || ObdPort.Protocol != Protocol.Unknown)
+                throw new ArgumentOutOfRangeException(ObdPort.Protocol.ToString(), "Protocol must be a value between of known type Int(1 and 9), inclusive.");
+            if (ObdPort == null)
             {
-                throw new ObdException("OBDPort not speficied.");
+                throw new ObdException("OBDPort not specified.");
             }
 
-            this.ObdPort.Connect();
-            FireConnectionChangedEvent(this.ObdPort.Connected);
+            ObdPort.Connect();
+            FireConnectionChangedEvent(ObdPort.Connected);
 
         }
         public void Disconnect()
         {
             ObdPort.Disconnect();
-            FireConnectionChangedEvent(this.ObdPort.Connected);
+            FireConnectionChangedEvent(ObdPort.Connected);
         }
 
 
