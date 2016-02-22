@@ -13,7 +13,7 @@ namespace Coding4Fun.Obd.ObdManager.Universal
 {
     class ObdUwpBluetooth: ObdPort
     {
-        protected override ObdResponse GetPidData(int mode, int pid)
+        protected internal override ObdResponse GetPidData(int mode, int pid)
         {
             throw new NotImplementedException();
         }

@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace Coding4Fun.Obd.ObdManager.Universal
 {
-    public struct ObdResponse
-    {
+    public class ObdResponse : Dictionary<int, byte[]>
+    { 
+
     }
 }

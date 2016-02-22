@@ -111,6 +111,7 @@
     <Compile Include="ConnectionChangedEventArgs.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="Extensions.cs" />
+    <Content Include="ObdDeviceold.txt" />
     <Compile Include="OBDPort.cs" />
     <Compile Include="ObdChangedEventArgs.cs" />
     <Compile Include="ObdRequest.cs" />

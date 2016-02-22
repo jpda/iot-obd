@@ -27,10 +27,8 @@ namespace Coding4Fun.Obd.ObdManager.Universal
             this.Baud = baud;
             this.ComPort = comPort;
         }
-
         public string ComPort { get; set; }
         public int Baud { get; set; }
-
         public override void Connect()
         {
             Connect(this.ComPort, this.Baud, Convert.ToInt32(this.Protocol));
@@ -42,21 +40,15 @@ namespace Coding4Fun.Obd.ObdManager.Universal
 
         public void Connect(string comPort, int baud, int protocol)
         {
-           
+            //implement connect logic
+            base.Connect();
         }
-
         public override void Disconnect()
         {
-            //if (_serial.IsOpen)
-            //{
-            //    _serial.Close();
-            //}
-            
+            //implement disconnect logic
             base.Disconnect();
         }
-
-
-        protected override ObdResponse GetPidData(int mode, int pid)
+        protected internal  ObdResponse GetPidData(byte mode, byte pid)
         {
             return new ObdResponse();
         }
