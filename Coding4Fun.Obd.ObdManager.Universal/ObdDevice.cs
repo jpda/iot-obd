@@ -10,7 +10,6 @@ namespace Coding4Fun.Obd.ObdManager.Universal
 {
 	public class ObdDevice
 	{
-		private AutoResetEvent _event;
 		public event EventHandler<ConnectionChangedEventArgs> ObdConnectionChanged;
         public ObdPort ObdPort{get; set;}
        

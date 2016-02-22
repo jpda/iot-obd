@@ -17,10 +17,6 @@ namespace Coding4Fun.Obd.ObdManager.Universal
         {
             throw new NotImplementedException();
         }
-
-        public override ObdResponse RequestPid(ObdRequest req)
-        {
-            throw new NotImplementedException();
-        }
+        
     }
 }
