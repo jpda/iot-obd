@@ -26,14 +26,12 @@ namespace Coding4Fun.Obd.ObdManager.Universal.Bluetooth
                 var devices = await DeviceInformation.FindAllAsync(RfcommDeviceService.GetDeviceSelector(RfcommServiceId.SerialPort));
                 var device = devices.Where(x => x.Name.ToLower().Contains(_deviceName.ToLower())).ToList();
 
-                if (device.Any())
-                {
-                    await ConnectDeviceAsync(device.Single());
-                }
-                else
+                if (!device.Any())
                 {
                     Debug.WriteLine("No devices found");
                 }
+
+                await ConnectDeviceAsync(device.Single());
             }
             catch (Exception ex)
             {
@@ -51,7 +49,6 @@ namespace Coding4Fun.Obd.ObdManager.Universal.Bluetooth
 
                 //todo: dispose in case it exists? not sure, really
                 _socket?.Dispose();
-
                 _socket = new StreamSocket();
 
                 try
@@ -89,10 +86,12 @@ namespace Coding4Fun.Obd.ObdManager.Universal.Bluetooth
             //Send("ATH1");
             //Send("ATSP 5");
             //Send(GetMessage());
+            Connected = true;
         }
 
         protected override ObdResponse GetPidData(int mode, int pid)
         {
+            //do socket ops
             throw new NotImplementedException();
         }
     }
