@@ -3,6 +3,8 @@ using Windows.Networking.Sockets;
 using System.Collections.ObjectModel;
 using Windows.Storage.Streams;
 using System.Threading;
+using Coding4Fun.Obd.ObdManager.Universal;
+using Coding4Fun.Obd.ObdManager.Universal.Bluetooth;
 
 namespace Parkwood.Tasks
 {
@@ -18,11 +20,28 @@ namespace Parkwood.Tasks
 
         public async void Run(IBackgroundTaskInstance taskInstance)
         {
-            //prevent the task from closing prematurely by using BackgroundTaskDeferral as
+            // prevent the task from closing prematurely by using BackgroundTaskDeferral as
             // described in http://aka.ms/backgroundtaskdeferral
             // Create the deferral by requesting it from the task instance.
             var deferral = taskInstance.GetDeferral();
 
+            var port = new ObdBluetoothPort();
+            
+            var obd = new ObdDevice();
+            obd.Connect(port);
+
+            obd.ObdConnectionChanged += (sender, args) =>
+            {
+                //include data in args? prob
+                obd.GetCurrentState();
+                //persist to wherever
+            };
+
+            while (true)
+            {
+                //keep this method open
+            }
+            
             //
             // Call asynchronous method(s) using the await keyword.
             //

@@ -107,15 +107,14 @@
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Scratch code.txt" />
     <Compile Include="ConnectionChangedEventArgs.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="Extensions.cs" />
-    <Compile Include="OBDPort.cs" />
+    <Compile Include="ObdPort.cs" />
     <Compile Include="ObdChangedEventArgs.cs" />
     <Compile Include="ObdRequest.cs" />
     <Compile Include="ObdResponse.cs" />
-    <Compile Include="OBDSerialPort.cs" />
+    <Compile Include="ObdSerialPort.cs" />
     <Compile Include="ObdDevice.cs" />
     <Compile Include="ObdException.cs" />
     <Compile Include="ObdHelpers.cs" />

@@ -1,18 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using Windows.Devices.SerialCommunication;
-
-using System.Threading;
-using Coding4Fun.Obd.ObdManager.Universal;
 
 namespace Coding4Fun.Obd.ObdManager.Universal
 {
-	public class ObdDevice
-	{
-		public event EventHandler<ConnectionChangedEventArgs> ObdConnectionChanged;
-        public ObdPort ObdPort{get; set;}
-       
+    public class ObdDevice
+    {
+        public event EventHandler<ConnectionChangedEventArgs> ObdConnectionChanged;
+        public ObdPort ObdPort { get; set; }
+
         public void Connect(ObdPort obdport)
         {
             this.ObdPort = obdport;
@@ -27,11 +21,10 @@ namespace Coding4Fun.Obd.ObdManager.Universal
             {
                 throw new ObdException("OBDPort not speficied.");
             }
-            else { 
-                this.ObdPort.Connect();
-                FireConnectionChangedEvent(this.ObdPort.Connected);
-            }
-            
+
+            this.ObdPort.Connect();
+            FireConnectionChangedEvent(this.ObdPort.Connected);
+
         }
         public void Disconnect()
         {
@@ -39,10 +32,10 @@ namespace Coding4Fun.Obd.ObdManager.Universal
             FireConnectionChangedEvent(this.ObdPort.Connected);
         }
 
-        
+
         public ObdState GetCurrentState()
         {
-            ObdState os = new ObdState();
+            var os = new ObdState();
             //run the object builder routine. 
 
             return os;
@@ -52,18 +45,14 @@ namespace Coding4Fun.Obd.ObdManager.Universal
             return this.ObdPort.GetPidData(req);
         }
         public ObdResponse Ping()
-		{
+        {
             //check to see if the port is open and responsive
             return GetPidData(new ObdRequest(0x01, 0x0C));
 
         }
-		private void FireConnectionChangedEvent(bool connected)
-		{
-			if(ObdConnectionChanged != null)
-				ObdConnectionChanged(this, new ConnectionChangedEventArgs { Connected = connected });
-		}
-
-
-
+        private void FireConnectionChangedEvent(bool connected)
+        {
+            ObdConnectionChanged?.Invoke(this, new ConnectionChangedEventArgs { Connected = connected });
+        }
     }
 }
