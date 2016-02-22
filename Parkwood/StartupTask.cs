@@ -40,7 +40,11 @@ namespace Parkwood
             //
             // Call asynchronous method(s) using the await keyword.
             //
-           
+            ObdDevice od = new ObdDevice();
+            OBDSerialPort osp = new OBDSerialPort();
+            osp.
+            od.Connect(obdp);
+            od.GetCurrentState().ToJson();
 
 
             //

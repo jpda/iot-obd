@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO.Ports;
 using System.Threading;
+
+
 
 namespace Coding4Fun.Obd.ObdManager
 {
@@ -11,107 +12,98 @@ namespace Coding4Fun.Obd.ObdManager
 		public const int UnknownProtocol = -1;
 		public const int UnsupportedPidValue = -1;
 
-		private SerialPort _serial;
-		private AutoResetEvent _event;
+        private int _currentEcu;
+        private AutoResetEvent _event;
 		private readonly SynchronizationContext _context = SynchronizationContext.Current;
 		private Dictionary<int,List<int>> _supportedPids = new Dictionary<int,List<int>>();
-		private int _protocol;
-		private int _currentEcu;
-		private bool _connected;
-		private int _errorCount;
-
 		public event EventHandler<ObdChangedEventArgs> ObdChanged;
 		public event EventHandler<ConnectionChangedEventArgs> ObdConnectionChanged;
 	
 		public string LastResponse { get; set; }
 		public ObdState ObdState { get; set; }
 
-		public void Connect(string comPort, int baud)
-		{
-			Connect(comPort, baud, UnknownProtocol, false);
-		}
+        public ObdPort ObdPort {get; set;}
 
-		public void Connect(string comPort, int baud, int protocol)
-		{
-			Connect(comPort, baud, protocol, false);
-		}
+        public ObdDevice()
+        {
+        }
+        public void Connect(ObdPort obdport)
+        {
+            this.ObdPort = obdport;
+            Connect();
+        }
+        public void Connect()
+        {
+            if (protocol > 9 || protocol != UnknownProtocol)
+                throw new ArgumentOutOfRangeException(protocol.ToString(), "Protocol must be a value between 1 and 9, inclusive.");
 
-		public void Connect(string comPort, int baud, int protocol, bool poll)
-		{
-			if(protocol > 9 || protocol != UnknownProtocol)
-				throw new ArgumentOutOfRangeException(protocol.ToString(), "Protocol must be a value between 1 and 9, inclusive.");
+            ObdState = new ObdState();
+            obdport.Connect();
+            FireConnectionChangedEvent(_connected);
 
-			ObdState = new ObdState();
+            LastResponse = WriteAndCheckResponse("ATZ"); // reset
+            LastResponse = WriteAndCheckResponse("ATE0"); // echo off
+            LastResponse = WriteAndCheckResponse("ATL0"); // line feeds off
 
-			_serial = new SerialPort(comPort, baud);
-			_serial.NewLine = ">";		// responses end with the > prompt character
-			_serial.Open();
+            // no longer allow the ELM's auto detect since we need to know which protocol we're using
+            if (protocol == UnknownProtocol || protocol == 0)
+            {
+                for (protocol = 1; protocol <= 9; protocol++)
+                {
+                    LastResponse = WriteAndCheckResponse("ATSP" + protocol); // OBD protocol
+                    try
+                    {
+                        LastResponse = WriteAndCheckResponse("01 00");  // send command to initialize comm bus (i.e. get PIDs supported)
+                        break;
+                    }
+                    catch (ObdException)
+                    {
+                        Trace.WriteLine("It's not protocol " + protocol);
+                    }
+                }
 
-			_errorCount = 0;
-			_connected = true;
-			FireConnectionChangedEvent(_connected);
+                if (protocol == 10)
+                    throw new ObdException("Could not find compatible protocol. Ensure the cable is securely connected to the OBD port on the vehicle.");
+            }
+            else
+            {
+                LastResponse = WriteAndCheckResponse("ATSP" + protocol); // OBD protocol
+                LastResponse = WriteAndCheckResponse("01 00");  // send command to initialize comm bus (i.e. get PIDs supported)
+            }
 
-			LastResponse = WriteAndCheckResponse("ATZ"); // reset
-			LastResponse = WriteAndCheckResponse("ATE0"); // echo off
-			LastResponse = WriteAndCheckResponse("ATL0"); // line feeds off
+            _protocol = protocol;
 
-			// no longer allow the ELM's auto detect since we need to know which protocol we're using
-			if(protocol == UnknownProtocol || protocol == 0)
-			{
-				for(protocol = 1; protocol <= 9; protocol++)
-				{
-					LastResponse = WriteAndCheckResponse("ATSP" + protocol); // OBD protocol
-					try
-					{
-						LastResponse = WriteAndCheckResponse("01 00");	// send command to initialize comm bus (i.e. get PIDs supported)
-						break;
-					}
-					catch(ObdException)
-					{
-						Trace.WriteLine("It's not protocol " + protocol);
-					}
-				}
+            LastResponse = WriteAndCheckResponse("ATH1"); // turn on headers (needed for ECU)
 
-				if(protocol == 10)
-					throw new ObdException("Could not find compatible protocol. Ensure the cable is securely connected to the OBD port on the vehicle.");
-			}
-			else
-			{
-				LastResponse = WriteAndCheckResponse("ATSP" + protocol); // OBD protocol
-				LastResponse = WriteAndCheckResponse("01 00");	// send command to initialize comm bus (i.e. get PIDs supported)
-			}
+            _supportedPids = GetSupportedPids();
 
-			_protocol = protocol;
+            int count = 0;
 
-			LastResponse = WriteAndCheckResponse("ATH1"); // turn on headers (needed for ECU)
+            foreach (var pidEntry in _supportedPids)
+            {
+                if (pidEntry.Value.Count > count)
+                {
+                    _currentEcu = pidEntry.Key;
+                    count = pidEntry.Value.Count;
+                }
+            }
 
-			_supportedPids = GetSupportedPids();
+            Trace.WriteLine("Using ECU " + _currentEcu + " with " + count + " PIDs");
 
-			int count = 0;
+            if (poll)
+            {
+                _event = new AutoResetEvent(false);
 
-			foreach(var pidEntry in _supportedPids)
-			{
-				if(pidEntry.Value.Count > count)
-				{
-					_currentEcu = pidEntry.Key;
-					count = pidEntry.Value.Count;
-				}
-			}
+                Thread t = new Thread(PollObd);
+                t.IsBackground = true;
+                t.Name = "ObdPoller";
+                t.Start();
+            }
+        }
 
-			Trace.WriteLine("Using ECU " + _currentEcu + " with " + count + " PIDs");
 
-			if(poll)
-			{
-				_event = new AutoResetEvent(false);
 
-				Thread t = new Thread(PollObd);
-				t.IsBackground = true;
-				t.Name = "ObdPoller";
-				t.Start();
-			}
-		}
-
-		private string WriteAndCheckResponse(string line)
+        private string WriteAndCheckResponse(string line)
 		{
 			WriteLine(line);
 			string response = _serial.ReadLine();
@@ -123,25 +115,9 @@ namespace Coding4Fun.Obd.ObdManager
 
 		public void Disconnect()
 		{
-			if(!_serial.IsOpen)
-				return;
-
-			_connected = false;
-
-			// wait for the poller to end
-			if(_event != null)
-				_event.WaitOne(2000, false);
-
-			_serial.Close();
-
 			FireConnectionChangedEvent(_connected);
 		}
-
-		private void WriteLine(string line)
-		{
-			_serial.Write(line + "\r");
-		}
-
+        
 		private void PollObd()
 		{
 			while(_connected)
