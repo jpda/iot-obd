@@ -130,6 +130,12 @@
       <InProject>false</InProject>
     </Content>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Coding4Fun.Obd.ObdManager.Universal\Coding4Fun.Obd.ObdManager.Universal.csproj">
+      <Project>{1a5d7481-cfc5-44db-abda-575f076ff9a3}</Project>
+      <Name>Coding4Fun.Obd.ObdManager.Universal</Name>
+    </ProjectReference>
+  </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

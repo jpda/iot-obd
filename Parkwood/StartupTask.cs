@@ -40,8 +40,7 @@ namespace Parkwood
             //
             // Call asynchronous method(s) using the await keyword.
             //
-            ObdState ostate = new ObdState();
-            ostate.ToJson();
+           
 
 
             //
