@@ -15,36 +15,37 @@ namespace Coding4Fun.Obd.ObdManager
 		private readonly SynchronizationContext _context = SynchronizationContext.Current;
 		private Dictionary<int,List<int>> _supportedPids = new Dictionary<int,List<int>>();
 
-        public event EventHandler<ObdChangedEventArgs> ObdChanged;
+        public event EventHandler<ObdChangedEventArgs> NewObdMessage;
 		public event EventHandler<ConnectionChangedEventArgs> ObdConnectionChanged;
 
         public ObdState ObdState { get; set; }
         public ObdPort ObdPort{get; set;}
+        public bool Poll { get; set; }
 
         public ObdDevice()
         {
         }
-        public void Connect(ObdPort obdport)
-        {
-            this.ObdPort = obdport;
-            Connect();
-        }
+       
         public void Disconnect()
         {
             ObdPort.Disconnect();
             FireConnectionChangedEvent(_connected);
         }
 
-
+        public void Connect(ObdPort obdport)
+        {
+            this.ObdPort = obdport;
+            Connect();
+        }
         private void Connect()
         {
             ObdPort.Connect();
-            if (protocol > 9 || protocol != UnknownProtocol)
-                throw new ArgumentOutOfRangeException(protocol.ToString(), "Protocol must be a value between 1 and 9, inclusive.");
+            if (Convert.ToInt32(this.ObdPort.Protocol) > 9 || this.ObdPort.Protocol != Protocol.Unknown)
+                throw new ArgumentOutOfRangeException(this.ObdPort.Protocol.ToString(), "Protocol must be a value between of known type Int(1 and 9), inclusive.");
 
             ObdState = new ObdState();
             this.ObdPort.Connect();
-            FireConnectionChangedEvent(_connected);
+            FireConnectionChangedEvent(this.ObdPort.Connected);
 
             LastResponse = WriteAndCheckResponse("ATZ"); // reset
             LastResponse = WriteAndCheckResponse("ATE0"); // echo off
@@ -286,7 +287,9 @@ namespace Coding4Fun.Obd.ObdManager
 			return pids;
 		}
 
-		public double GetKilometersPerGallon(int kph, double massAirflow)
+        #region PidSpecificMethods
+
+        public double GetKilometersPerGallon(int kph, double massAirflow)
 		{
 			//only calculate if supported
 			if (kph == UnsupportedPidValue || massAirflow == UnsupportedPidValue)
@@ -431,5 +434,6 @@ namespace Coding4Fun.Obd.ObdManager
 				return UnsupportedPidValue;
 			return result[_currentEcu][0] - 40;
 		}
-	}
+        #endregion
+    }
 }

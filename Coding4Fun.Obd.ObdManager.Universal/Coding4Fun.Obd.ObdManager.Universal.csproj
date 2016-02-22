@@ -112,6 +112,8 @@
     <Compile Include="Extensions.cs" />
     <Compile Include="OBDPort.cs" />
     <Compile Include="ObdChangedEventArgs.cs" />
+    <Compile Include="ObdRequest.cs" />
+    <Compile Include="ObdResponse.cs" />
     <Compile Include="OBDSerialPort.cs" />
     <Compile Include="ObdDevice.cs" />
     <Compile Include="ObdException.cs" />

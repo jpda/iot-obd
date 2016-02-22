@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Coding4Fun.Obd.ObdManager
+namespace Coding4Fun.Obd.ObdManager.Universal
 {
     public abstract class ObdPort
     {
-        public const int UnknownProtocol = -1;
-        public string LastResponse { get; set; }
+        public ObdResponse LastResponse { get; set; }
+        public ObdRequest LastRequest { get; set; }
         public virtual void Connect()
         {
             this.Connected = true;
@@ -19,7 +19,6 @@ namespace Coding4Fun.Obd.ObdManager
         }
         public Protocol Protocol { get; set; }
         public bool Connected { get; protected set; }
-        public bool Poll { get; set; }
-        public abstract void WriteLine(string line);
+        public abstract ObdResponse RequestPid(ObdRequest req);
     }
 }
