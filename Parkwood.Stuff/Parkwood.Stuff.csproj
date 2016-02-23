@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{1A5D7481-CFC5-44DB-ABDA-575F076FF9A3}</ProjectGuid>
+    <ProjectGuid>{CBE6BA47-B460-47CB-8346-E8455B8E62BE}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Coding4Fun.Obd.ObdManager.Universal</RootNamespace>
-    <AssemblyName>Coding4Fun.Obd.ObdManager.Universal</AssemblyName>
+    <RootNamespace>Parkwood.Stuff</RootNamespace>
+    <AssemblyName>Parkwood.Stuff</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
     <TargetPlatformVersion>10.0.10586.0</TargetPlatformVersion>
@@ -107,35 +107,9 @@
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ConnectionChangedEventArgs.cs" />
-    <Compile Include="Enums.cs" />
-    <Compile Include="Extensions.cs" />
-    <Compile Include="ObdPort.cs" />
-    <Compile Include="ObdChangedEventArgs.cs" />
-    <Compile Include="ObdRequest.cs" />
-    <Compile Include="ObdResponse.cs" />
-    <Compile Include="ObdSerialPort.cs" />
-    <Compile Include="ObdDevice.cs" />
-    <Compile Include="ObdException.cs" />
-    <Compile Include="ObdHelpers.cs" />
-    <Compile Include="ObdState.cs" />
-    <Compile Include="Bluetooth\ObdBluetoothPort.cs" />
+    <Compile Include="Logger.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="Properties\Coding4Fun.Obd.ObdManager.Universal.rd.xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <SDKReference Include="WindowsIoT, Version=10.0.10586.0">
-      <Name>Windows IoT Extensions for the UWP</Name>
-    </SDKReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Scratch code.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Parkwood.Stuff\Parkwood.Stuff.csproj">
-      <Project>{CBE6BA47-B460-47CB-8346-E8455B8E62BE}</Project>
-      <Name>Parkwood.Stuff</Name>
-    </ProjectReference>
+    <EmbeddedResource Include="Properties\Parkwood.Stuff.rd.xml" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

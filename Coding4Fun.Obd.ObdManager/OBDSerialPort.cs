@@ -6,18 +6,16 @@ using System.Diagnostics;
 using System.IO.Ports;
 using System.Threading;
 
-
-
 namespace Coding4Fun.Obd.ObdManager
 {
-    class OBDSerialPort : ObdPort
+    class ObdSerialPort : ObdPort
     {
         private SerialPort _serial;
 
         public string ComPort { get; set; }
         public int Baud { get; set; }
         public int Protocol { get; set; }
-        public bool Poll { get; set; }
+        public new bool Poll { get; set; }
 
         public override bool Connected
         {

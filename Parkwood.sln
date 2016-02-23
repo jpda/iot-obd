@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Parkwood", "Parkwood\Parkwo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Coding4Fun.Obd.ObdManager.Universal", "Coding4Fun.Obd.ObdManager.Universal\Coding4Fun.Obd.ObdManager.Universal.csproj", "{1A5D7481-CFC5-44DB-ABDA-575F076FF9A3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Parkwood.Stuff", "Parkwood.Stuff\Parkwood.Stuff.csproj", "{CBE6BA47-B460-47CB-8346-E8455B8E62BE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -43,7 +45,6 @@ Global
 		{1A5D7481-CFC5-44DB-ABDA-575F076FF9A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1A5D7481-CFC5-44DB-ABDA-575F076FF9A3}.Debug|ARM.ActiveCfg = Debug|ARM
 		{1A5D7481-CFC5-44DB-ABDA-575F076FF9A3}.Debug|ARM.Build.0 = Debug|ARM
-		{1A5D7481-CFC5-44DB-ABDA-575F076FF9A3}.Debug|ARM.Deploy.0 = Debug|ARM
 		{1A5D7481-CFC5-44DB-ABDA-575F076FF9A3}.Debug|x64.ActiveCfg = Debug|x64
 		{1A5D7481-CFC5-44DB-ABDA-575F076FF9A3}.Debug|x64.Build.0 = Debug|x64
 		{1A5D7481-CFC5-44DB-ABDA-575F076FF9A3}.Debug|x86.ActiveCfg = Debug|x86
@@ -56,6 +57,22 @@ Global
 		{1A5D7481-CFC5-44DB-ABDA-575F076FF9A3}.Release|x64.Build.0 = Release|x64
 		{1A5D7481-CFC5-44DB-ABDA-575F076FF9A3}.Release|x86.ActiveCfg = Release|x86
 		{1A5D7481-CFC5-44DB-ABDA-575F076FF9A3}.Release|x86.Build.0 = Release|x86
+		{CBE6BA47-B460-47CB-8346-E8455B8E62BE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CBE6BA47-B460-47CB-8346-E8455B8E62BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CBE6BA47-B460-47CB-8346-E8455B8E62BE}.Debug|ARM.ActiveCfg = Debug|ARM
+		{CBE6BA47-B460-47CB-8346-E8455B8E62BE}.Debug|ARM.Build.0 = Debug|ARM
+		{CBE6BA47-B460-47CB-8346-E8455B8E62BE}.Debug|x64.ActiveCfg = Debug|x64
+		{CBE6BA47-B460-47CB-8346-E8455B8E62BE}.Debug|x64.Build.0 = Debug|x64
+		{CBE6BA47-B460-47CB-8346-E8455B8E62BE}.Debug|x86.ActiveCfg = Debug|x86
+		{CBE6BA47-B460-47CB-8346-E8455B8E62BE}.Debug|x86.Build.0 = Debug|x86
+		{CBE6BA47-B460-47CB-8346-E8455B8E62BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CBE6BA47-B460-47CB-8346-E8455B8E62BE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CBE6BA47-B460-47CB-8346-E8455B8E62BE}.Release|ARM.ActiveCfg = Release|ARM
+		{CBE6BA47-B460-47CB-8346-E8455B8E62BE}.Release|ARM.Build.0 = Release|ARM
+		{CBE6BA47-B460-47CB-8346-E8455B8E62BE}.Release|x64.ActiveCfg = Release|x64
+		{CBE6BA47-B460-47CB-8346-E8455B8E62BE}.Release|x64.Build.0 = Release|x64
+		{CBE6BA47-B460-47CB-8346-E8455B8E62BE}.Release|x86.ActiveCfg = Release|x86
+		{CBE6BA47-B460-47CB-8346-E8455B8E62BE}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

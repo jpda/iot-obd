@@ -1,15 +1,18 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Coding4Fun.Obd.ObdManager.Universal
 {
-	public class ObdDevice
-	{
-		public event EventHandler<ConnectionChangedEventArgs> ObdConnectionChanged;
-        public ObdPort ObdPort{get; set;}
+    public class ObdDevice
+    {
+        public event EventHandler<ConnectionChangedEventArgs> ObdConnectionChanged;
+
+        public ObdPort ObdPort { get; set; }
+
         private Dictionary<int, List<int>> _supportedPids = new Dictionary<int, List<int>>();
         private int _currentEcu;
         public const int UnsupportedPidValue = -1;
-       
+
         public void Connect(ObdPort obdport)
         {
             ObdPort = obdport;
@@ -24,12 +27,11 @@ namespace Coding4Fun.Obd.ObdManager.Universal
             {
                 throw new ObdException("OBDPort not speficied.");
             }
-            else { 
-                this.ObdPort.Connect();
-                GetSupportedPids();
-                FireConnectionChangedEvent(this.ObdPort.Connected);
-            }
-            
+
+            ObdPort.Connect();
+            GetSupportedPids();
+            FireConnectionChangedEvent(ObdPort.Connected);
+
             ObdPort.Connect();
             FireConnectionChangedEvent(ObdPort.Connected);
 
@@ -42,32 +44,32 @@ namespace Coding4Fun.Obd.ObdManager.Universal
 
         public Dictionary<int, List<int>> GetSupportedPids()
         {
-            Dictionary<int, List<int>> supportedPids = new Dictionary<int, List<int>>();
-        
-            var result = this.ObdPort.GetPidData(0x01, 0x00);
+            var supportedPids = new Dictionary<int, List<int>>();
+
+            var result = ObdPort.GetPidData(0x01, 0x00);
             foreach (var payload in result)
                 supportedPids[payload.Key] = DecodeSupportedPids(payload.Value, 0x00);
 
-            result = this.ObdPort.GetPidData(0x01, 0x20);
+            result = ObdPort.GetPidData(0x01, 0x20);
             foreach (var payload in result)
                 supportedPids[payload.Key].AddRange(DecodeSupportedPids(payload.Value, 0x20));
 
-            result = this.ObdPort.GetPidData(0x01, 0x40);
+            result = ObdPort.GetPidData(0x01, 0x40);
             foreach (var payload in result)
                 supportedPids[payload.Key].AddRange(DecodeSupportedPids(payload.Value, 0x40));
 
             return supportedPids;
         }
-        private List<int> DecodeSupportedPids(byte[] data, int offset)
+        private static List<int> DecodeSupportedPids(IReadOnlyList<byte> data, int offset)
         {
-            List<int> pids = new List<int>();
+            var pids = new List<int>();
 
             if (data == null)
                 return pids;
 
-            for (int byteIdx = 0; byteIdx < data.Length; byteIdx++)
+            for (var byteIdx = 0; byteIdx < data.Count; byteIdx++)
             {
-                for (int i = 0; i < 8; i++)
+                for (var i = 0; i < 8; i++)
                 {
                     if ((data[byteIdx] << i & 0x80) == 0x80)
                         pids.Add(byteIdx * 8 + i + 1 + offset);
@@ -82,20 +84,22 @@ namespace Coding4Fun.Obd.ObdManager.Universal
 
             return os;
         }
+
         public ObdResponse GetPidData(ObdRequest req)
         {
-            return this.ObdPort.GetPidData(req);
+            return ObdPort.GetPidData(req);
         }
+
         public ObdResponse Ping()
-		{
+        {
             //check to see if the port is open and responsive
             return GetPidData(new ObdRequest(0x01, 0x0C));
-
         }
-		private void FireConnectionChangedEvent(bool connected)
-		{
+
+        private void FireConnectionChangedEvent(bool connected)
+        {
             ObdConnectionChanged?.Invoke(this, new ConnectionChangedEventArgs { Connected = connected });
-		}
+        }
 
         public double GetKilometersPerGallon(int kph, double massAirflow)
         {
@@ -117,10 +121,7 @@ namespace Coding4Fun.Obd.ObdManager.Universal
 
         public int GetMilesPerHour(int kph)
         {
-            if (kph == UnsupportedPidValue)
-                return UnsupportedPidValue;
-
-            return ObdHelpers.KilometersPerHourToMilesPerHour(kph);
+            return kph == UnsupportedPidValue ? UnsupportedPidValue : ObdHelpers.KilometersPerHourToMilesPerHour(kph);
         }
 
         public bool GetMilLightOn()
@@ -242,6 +243,5 @@ namespace Coding4Fun.Obd.ObdManager.Universal
                 return UnsupportedPidValue;
             return result[_currentEcu][0] - 40;
         }
-
     }
 }

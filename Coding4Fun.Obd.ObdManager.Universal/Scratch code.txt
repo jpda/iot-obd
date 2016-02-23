@@ -13,7 +13,7 @@
 
         if (numDevices == 0)
         {
-            System.Diagnostics.Debug.WriteLine("InitializeRfcommDeviceService: No paired devices found.");
+            System.Diagnostics.Logger.DebugWrite("InitializeRfcommDeviceService: No paired devices found.");
         }
         else
         {
@@ -22,7 +22,7 @@
             {
                 PairedDeviceInfo pdi = new PairedDeviceInfo(deviceInfo);
                 _pairedDevices.Add(pdi);
-                System.Diagnostics.Debug.WriteLine(pdi.ToString());
+                System.Diagnostics.Logger.DebugWrite(pdi.ToString());
                 //find the correct OBD Sensor
                 if (pdi.ToString().Contains("OBDLink MX"))
                 {
@@ -34,7 +34,7 @@
     }
     catch (Exception ex)
     {
-        System.Diagnostics.Debug.WriteLine("InitializeRfcommDeviceService: " + ex.Message);
+        System.Diagnostics.Logger.DebugWrite("InitializeRfcommDeviceService: " + ex.Message);
     }
 }
 async void ConnectDevice(PairedDeviceInfo pairedDevice)
@@ -71,13 +71,13 @@ async void ConnectDevice(PairedDeviceInfo pairedDevice)
         catch (Exception ex)
         {
             success = false;
-            System.Diagnostics.Debug.WriteLine("Connect:" + ex.Message);
+            System.Diagnostics.Logger.DebugWrite("Connect:" + ex.Message);
         }
         // If the connection was successful, the RemoteAddress field will be populated
         if (success)
         {
             string msg = String.Format("Connected to {0}!", _socket.Information.RemoteAddress.DisplayName);
-            System.Diagnostics.Debug.WriteLine(msg);
+            System.Diagnostics.Logger.DebugWrite(msg);
 
             //send a message
             Send("ATZ");
@@ -93,7 +93,7 @@ async void ConnectDevice(PairedDeviceInfo pairedDevice)
     }
     catch (Exception ex)
     {
-        System.Diagnostics.Debug.WriteLine("Overall Connect: " + ex.Message);
+        System.Diagnostics.Logger.DebugWrite("Overall Connect: " + ex.Message);
         _socket.Dispose();
         _socket = null;
     }
@@ -110,7 +110,7 @@ public async void Send(string msg)
     }
     catch (Exception ex)
     {
-        System.Diagnostics.Debug.WriteLine("Send(): " + ex.Message);
+        System.Diagnostics.Logger.DebugWrite("Send(): " + ex.Message);
     }
     finally
     {
@@ -149,7 +149,7 @@ private async Task WriteAsync(string msg)
         string status_Text = msg + ", ";
         status_Text += bytesWritten.ToString();
         status_Text += " bytes written successfully!";
-        System.Diagnostics.Debug.WriteLine(status_Text);
+        System.Diagnostics.Logger.DebugWrite(status_Text);
     }
     Listen();
 }
@@ -178,11 +178,11 @@ private async void Listen()
     {
         if (ex.GetType().Name == "TaskCanceledException")
         {
-            System.Diagnostics.Debug.WriteLine("Listen: Reading task was cancelled, closing device and cleaning up");
+            System.Diagnostics.Logger.DebugWrite("Listen: Reading task was cancelled, closing device and cleaning up");
         }
         else
         {
-            System.Diagnostics.Debug.WriteLine("Listen: " + ex.Message);
+            System.Diagnostics.Logger.DebugWrite("Listen: " + ex.Message);
         }
     }
     finally
@@ -223,11 +223,11 @@ private async Task ReadAsync(CancellationToken cancellationToken)
         try
         {
             string recvdtxt = dataReaderObject.ReadString(bytesRead);
-            System.Diagnostics.Debug.WriteLine(recvdtxt);
+            System.Diagnostics.Logger.DebugWrite(recvdtxt);
         }
         catch (Exception ex)
         {
-            System.Diagnostics.Debug.WriteLine("ReadAsync: " + ex.Message);
+            System.Diagnostics.Logger.DebugWrite("ReadAsync: " + ex.Message);
         }
 
     }

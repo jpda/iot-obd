@@ -37,7 +37,7 @@ namespace Parkwood.Tasks
 
             }
 
-            deferral.Complete();
+            //deferral.Complete();
         }
 
         private static ObdDevice GetDevice(string deviceName)

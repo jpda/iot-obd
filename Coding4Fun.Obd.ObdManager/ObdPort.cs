@@ -15,7 +15,7 @@ namespace Coding4Fun.Obd.ObdManager
         { 
             this.Connected = false;
         }
-        public bool Connected { get; protected set; }
+        public virtual bool Connected { get; protected set; }
         public bool Poll { get; set;}
         public abstract void WriteLine(string line);
     }

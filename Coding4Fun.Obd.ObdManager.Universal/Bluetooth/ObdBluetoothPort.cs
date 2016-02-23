@@ -1,10 +1,13 @@
 ﻿using System;
-using System.Diagnostics;
+using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Windows.Devices.Bluetooth.Rfcomm;
 using Windows.Devices.Enumeration;
 using Windows.Networking.Sockets;
+using Windows.Storage.Streams;
+using Parkwood.Stuff;
 
 namespace Coding4Fun.Obd.ObdManager.Universal.Bluetooth
 {
@@ -28,16 +31,77 @@ namespace Coding4Fun.Obd.ObdManager.Universal.Bluetooth
 
                 if (!device.Any())
                 {
-                    Debug.WriteLine("No devices found");
+                    Logger.DebugWrite("No devices found");
+                    return;
                 }
 
                 await ConnectDeviceAsync(device.Single());
             }
             catch (Exception ex)
             {
-                Debug.WriteLine("InitializeRfcommDeviceService: " + ex.Message);
+                Logger.DebugWrite(ex.Message);
             }
             base.Connect();
+        }
+
+        public override async void SendCommand(string cmd)
+        {
+            var writer = new DataWriter(_socket.OutputStream);
+            writer.WriteString(cmd);
+            var storeAsyncTask = writer.StoreAsync().AsTask();
+            var bytesWritten = await storeAsyncTask;
+            Logger.DebugWrite($"Wrote {bytesWritten} bytes.");
+        }
+
+        public override async Task<string> ReadResponse()
+        {
+            try
+            {
+                var cancellationToken = new CancellationTokenSource();
+                if (_socket.InputStream != null)
+                {
+                    while (true)
+                    {
+                        var response = await ReadAsync(cancellationToken.Token);
+                        return response;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                if (ex.GetType().Name == "TaskCanceledException")
+                {
+                    Logger.DebugWrite("Listen: Reading task was cancelled, closing device and cleaning up");
+                }
+                else
+                {
+                    Logger.DebugWrite("Listen: " + ex.Message);
+                }
+            }
+            return string.Empty;
+        }
+
+        private async Task<string> ReadAsync(CancellationToken token)
+        {
+            const uint readBufferLength = 1024;
+
+            token.ThrowIfCancellationRequested();
+            var reader = new DataReader(_socket.InputStream) { InputStreamOptions = InputStreamOptions.Partial };
+            var loadAsyncTask = reader.LoadAsync(readBufferLength).AsTask(token);
+            var bytesRead = await loadAsyncTask;
+
+            if (bytesRead <= 0) return string.Empty;
+
+            try
+            {
+                return reader.ReadString(bytesRead);
+            }
+            catch (Exception ex)
+            {
+                Logger.DebugWrite("ReadAsync: " + ex.Message);
+            }
+
+            return string.Empty;
         }
 
         private async Task ConnectDeviceAsync(DeviceInformation pairedDevice)
@@ -58,38 +122,31 @@ namespace Coding4Fun.Obd.ObdManager.Universal.Bluetooth
                 catch (Exception ex)
                 {
                     success = false;
-                    System.Diagnostics.Debug.WriteLine("Connect:" + ex.Message);
+                    Logger.DebugWrite("Connect:" + ex.Message);
                 }
 
                 if (success)
                 {
                     var msg = $"Connected to {_socket.Information.RemoteAddress.DisplayName}!";
-                    System.Diagnostics.Debug.WriteLine(msg);
+                    Logger.DebugWrite(msg);
                     InitializeDevice();
                 }
             }
             catch (Exception ex)
             {
-                Debug.WriteLine("Overall Connect: " + ex.Message);
-                _socket.Dispose();
+                Logger.DebugWrite("Overall Connect: " + ex.Message);
+                _socket?.Dispose();
                 _socket = null;
             }
         }
 
-        private async void InitializeDevice()
+        private void InitializeDevice()
         {
-            //send a message
-            //Send("ATZ");
-            //Listen();
-            //Send("ATE0");
-            //Send("ATL0");
-            //Send("ATH1");
-            //Send("ATSP 5");
-            //Send(GetMessage());
+            new List<string>() { "ATZ", "ATE0", "ATL0", "ATH1", "ATSP 5" }.ForEach(SendCommand);
             Connected = true;
         }
 
-        protected override ObdResponse GetPidData(int mode, int pid)
+        public override ObdResponse GetPidData(int mode, int pid)
         {
             //do socket ops
             throw new NotImplementedException();
