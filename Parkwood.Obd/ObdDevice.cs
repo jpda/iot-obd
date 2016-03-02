@@ -50,8 +50,8 @@ namespace Parkwood.Obd
 
                 //fill out the state object
                 ObdState state = new ObdState("");
+                Dictionary<string, ObdPid> currentPids = new Dictionary<string, ObdPid>();
 
-                BasePid p = new Rpm();
                
                 state.Add(p.Name, p);
                        

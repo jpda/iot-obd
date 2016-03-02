@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Parkwood.Obd
 {
-    public abstract class BasePid
+    public abstract class ObdPid
     {
         public byte[] Raw { get; set; }
         public string Name { get; set; }
@@ -20,7 +20,5 @@ namespace Parkwood.Obd
             }
                 
         }
-        public abstract object GetComputedValue();
-
     }
 }
