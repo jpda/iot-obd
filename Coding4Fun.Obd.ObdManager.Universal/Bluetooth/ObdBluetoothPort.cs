@@ -106,7 +106,7 @@ namespace Coding4Fun.Obd.ObdManager.Universal.Bluetooth
 
         private async Task ConnectDeviceAsync(DeviceInformation pairedDevice)
         {
-            var success = true;
+            var success = false;
             try
             {
                 _service = Task.Run(async () => await RfcommDeviceService.FromIdAsync(pairedDevice.Id)).Result;
@@ -118,6 +118,7 @@ namespace Coding4Fun.Obd.ObdManager.Universal.Bluetooth
                 try
                 {
                     await _socket.ConnectAsync(_service.ConnectionHostName, _service.ConnectionServiceName);
+                    success = true;
                 }
                 catch (Exception ex)
                 {
@@ -129,7 +130,7 @@ namespace Coding4Fun.Obd.ObdManager.Universal.Bluetooth
                 {
                     var msg = $"Connected to {_socket.Information.RemoteAddress.DisplayName}!";
                     Logger.DebugWrite(msg);
-                    InitializeDevice();
+                    
                 }
             }
             catch (Exception ex)
@@ -140,11 +141,6 @@ namespace Coding4Fun.Obd.ObdManager.Universal.Bluetooth
             }
         }
 
-        private void InitializeDevice()
-        {
-            new List<string>() { "ATZ", "ATE0", "ATL0", "ATH1", "ATSP 5" }.ForEach(SendCommand);
-            Connected = true;
-        }
 
         public override ObdResponse GetPidData(int mode, int pid)
         {

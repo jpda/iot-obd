@@ -1,8 +1,8 @@
 ﻿using Windows.ApplicationModel.Background;
 using System.Threading;
-using Coding4Fun.Obd.ObdManager.Universal;
-using Coding4Fun.Obd.ObdManager.Universal.Bluetooth;
+
 using Parkwood.Configuration;
+using Parkwood.Obd;
 
 namespace Parkwood.Tasks
 {
@@ -12,41 +12,18 @@ namespace Parkwood.Tasks
 
         public async void Run(IBackgroundTaskInstance taskInstance)
         {
-            //hack to find any device with OBD in the name if nothing exists in settings
-            var deviceName = ConfigurationManager.Get("TargetDeviceName");
-            deviceName = deviceName == string.Empty ? "OBD" : ConfigurationManager.Get("TargetDeviceName");
-
+            
             //should figure out what to do with this deferral
             var deferral = taskInstance.GetDeferral();
-            var device = GetDevice(deviceName);
 
-            while (true)
-            {
-                if (device == null)
-                {
-                    device = GetDevice(deviceName);
-                    device.ObdConnectionChanged += (sender, args) =>
-                    {
-                        // save device name for 'last known?'
-                    };
-                }
-
-                //get stats
-                device.GetCurrentState();
-                //notify subscribers, e.g., event hub, local trace, etc
-
-            }
-
-            //deferral.Complete();
+            // Define a provider and two observers.
+            ObdDevice provider = new ObdDevice();
+            IoTOdbPublisher reporter1 = new IoTOdbPublisher("AzureIot");
+            reporter1.Subscribe(provider);
+            provider.EndTransmission();
+            
+            deferral.Complete();
         }
 
-        private static ObdDevice GetDevice(string deviceName)
-        {
-            var port = new ObdBluetoothPort(deviceName);
-
-            var obd = new ObdDevice();
-            obd.Connect(port);
-            return obd;
-        }
     }
 }
