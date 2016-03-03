@@ -107,6 +107,7 @@
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ObdEcu.cs" />
     <Compile Include="ObdPid.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="IoTOdbPublisher.cs" />

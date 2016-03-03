@@ -89,18 +89,18 @@ namespace Parkwood.Obd
             return obdData[0] - 40;
         }
 
-        public static Dictionary<string, byte[]> ParsePidCmd(string commandResult, Protocol protocol)
+        public static Dictionary<int, byte[]> ParsePidCmd(string commandResult, Protocol protocol)
         {
-            var payload = new Dictionary<string, byte[]>();
+            var payload = new Dictionary<int, byte[]>();
             if (commandResult.Contains("NO DATA") || commandResult.Contains("ERROR"))
             {
                 //commandResult is bad. Eject.   
                 return null;
             }
             //there maybe multiple lines to deal with
-            var ecuResponses = commandResult.Trim().Split('\r');
+            var ecus = commandResult.Trim().Split('\r');
 
-            foreach (var ecuResponse in ecuResponses)
+            foreach (var ecuResponse in ecus)
             {
                 int offset;
                 int ecuByte;
@@ -125,7 +125,7 @@ namespace Parkwood.Obd
 
 
                 var strings = ecuResponse.Trim().Split(' ');
-                var bytes = new byte[strings.Length - offset - 1];   // get rid of the header and the trailing checksum byte
+                var bytes = new byte[strings.Length - offset]; // get rid of the header and the trailing checksum byte
 
                 for (var i = offset; i < strings.Length - 1; i++)
                 {
@@ -133,7 +133,7 @@ namespace Parkwood.Obd
                         bytes[i - offset] = Convert.ToByte(strings[i].Trim(), 16);
                 }
 
-                payload[(Convert.ToInt32(strings[ecuByte].Trim(), 16)).ToString()] = bytes;
+                payload[Convert.ToInt32(strings[ecuByte].Trim(), 16)] = bytes;
             }
 
             return payload;

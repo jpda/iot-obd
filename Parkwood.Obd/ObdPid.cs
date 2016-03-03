@@ -10,6 +10,6 @@
 
         public string Pid { get; set; }
 
-        public string PidCommand => $"{Mode} {Pid}";
+        public string PidCommand => $"{Mode}{Pid}";
     }
 }
