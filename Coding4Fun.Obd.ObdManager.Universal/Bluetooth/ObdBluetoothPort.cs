@@ -48,8 +48,8 @@ namespace Coding4Fun.Obd.ObdManager.Universal.Bluetooth
         {
             var writer = new DataWriter(_socket.OutputStream);
             writer.WriteString(cmd);
-            var storeAsyncTask = writer.StoreAsync().AsTask();
-            var bytesWritten = await storeAsyncTask;
+            var writeTask = writer.StoreAsync().AsTask();
+            var bytesWritten = await writeTask;
             Logger.DebugWrite($"Wrote {bytesWritten} bytes.");
         }
 
@@ -106,7 +106,7 @@ namespace Coding4Fun.Obd.ObdManager.Universal.Bluetooth
 
         private async Task ConnectDeviceAsync(DeviceInformation pairedDevice)
         {
-            var success = true;
+            var success = false;
             try
             {
                 _service = Task.Run(async () => await RfcommDeviceService.FromIdAsync(pairedDevice.Id)).Result;
@@ -118,6 +118,7 @@ namespace Coding4Fun.Obd.ObdManager.Universal.Bluetooth
                 try
                 {
                     await _socket.ConnectAsync(_service.ConnectionHostName, _service.ConnectionServiceName);
+                    success = true;
                 }
                 catch (Exception ex)
                 {
@@ -148,7 +149,7 @@ namespace Coding4Fun.Obd.ObdManager.Universal.Bluetooth
 
         public override ObdResponse GetPidData(int mode, int pid)
         {
-            //do socket ops
+            
             throw new NotImplementedException();
         }
     }
