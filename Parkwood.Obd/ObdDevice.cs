@@ -16,8 +16,11 @@ namespace Parkwood.Obd
 
         public ObdDevice(ObdPort p)
         {
+            //setup the ports
             this.port = p;
+            ObdState.Port = p;
             observers = new List<IObserver<ObdState>>();
+
             //begin publishing pid data
             Publish();
         }
@@ -47,10 +50,8 @@ namespace Parkwood.Obd
         {
             foreach (var observer in observers)
             {
-                //fill out the state object
-                ObdState state = new ObdState(port);
                 //publish state to each subscriber
-                observer.OnNext(state);
+                observer.OnNext(ObdState.CurrentState);
             }
         }
 
