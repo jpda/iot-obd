@@ -6,9 +6,9 @@
 
         public string Name { get; set; }
 
-        public byte Mode { get; set; }
+        public string Mode { get; set; }
 
-        public byte Pid { get; set; }
+        public string Pid { get; set; }
 
         public string PidCommand => $"{Mode} {Pid}";
     }

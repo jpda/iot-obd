@@ -89,52 +89,43 @@ namespace Parkwood.Obd
             return obdData[0] - 40;
         }
 
-        public static Dictionary<int, byte[]> ParsePidCmd(string commandResult, Protocol protocol)
+        public static Dictionary<string, byte[]> ParsePidCmd(string commandResult, Protocol protocol)
         {
-            var payload = new Dictionary<int, byte[]>();
+            var payload = new Dictionary<string, byte[]>();
             if (commandResult.Contains("NO DATA") || commandResult.Contains("ERROR"))
             {
+                //commandResult is bad. Eject.   
                 return null;
             }
-
+            //there maybe multiple lines to deal with
             var ecuResponses = commandResult.Trim().Split('\r');
 
             foreach (var ecuResponse in ecuResponses)
             {
-                //todo: what are these for? we need to get the decoding offsets from the original project, I think
-                const int offset = 5;
-                const int ecuByte = 3;
+                int offset;
+                int ecuByte;
 
                 switch (protocol)
                 {
-                    case Protocol.Unknown:
-                        break;
-                    case Protocol.ElmAutomatic:
-                        break;
-                    case Protocol.SaeJ1850Pwm:
-                        break;
-                    case Protocol.SaeJ1850Vpw:
-                        break;
                     case Protocol.Iso91412:
-                        break;
-                    case Protocol.Iso142304Kwp5Baud104Kbaud:
-                        break;
-                    case Protocol.Iso142304KwpFast104Kbaud:
+                        offset = 5;
+                        ecuByte = 2;
                         break;
                     case Protocol.Iso157654Can11Bit500Kbaud:
+                        offset = 4;
+                        ecuByte = 0;
                         break;
                     case Protocol.Iso157654Can29Bit500Kbaud:
-                        break;
-                    case Protocol.Iso157654Can11Bit250Kbaud:
-                        break;
-                    case Protocol.Iso157654Can29Bit250Kbaud:
+                        offset = 7;
+                        ecuByte = 3;
                         break;
                     default:
-                        throw new ObdException("Unhandled protocol type.  Feel free to add it and send us the changes!");
+                        throw new ObdException("Unhandled protocol type.");
                 }
 
+
                 var strings = ecuResponse.Trim().Split(' ');
-                var bytes = new byte[strings.Length - offset - 1];
+                var bytes = new byte[strings.Length - offset - 1];   // get rid of the header and the trailing checksum byte
 
                 for (var i = offset; i < strings.Length - 1; i++)
                 {
@@ -142,7 +133,7 @@ namespace Parkwood.Obd
                         bytes[i - offset] = Convert.ToByte(strings[i].Trim(), 16);
                 }
 
-                payload[Convert.ToInt32(strings[ecuByte].Trim(), 16)] = bytes;
+                payload[(Convert.ToInt32(strings[ecuByte].Trim(), 16)).ToString()] = bytes;
             }
 
             return payload;
@@ -165,6 +156,5 @@ namespace Parkwood.Obd
             }
             return pids;
         }
-
     }
 }

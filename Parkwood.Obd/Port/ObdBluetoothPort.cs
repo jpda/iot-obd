@@ -96,7 +96,6 @@ namespace Parkwood.Obd.Port
 
             try
             {
-                reader.ReadBytes();
                 return reader.ReadString(bytesRead);
             }
             catch (Exception ex)
