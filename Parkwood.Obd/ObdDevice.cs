@@ -1,58 +1,71 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Parkwood.Obd
 {
-    public class ObdDevice : IObservable<ObdState>
+    public class ObdDevice : IObservable<State>
     {
+        private readonly List<IObserver<State>> _observers;
+        private bool _publish;
+        private readonly ObdPort _port;
+        private Dictionary<int, List<int>> _supportedPids = new Dictionary<int, List<int>>();
+        private List<ObdPid> _desiredPids = new List<ObdPid>();  
+        private readonly Protocol _protocol;
+        private State _state;
 
-        private List<IObserver<ObdState>> observers;
-        private ObdPort port;
-        private bool publish;
-
-
-        public ObdDevice(ObdPort p)
+        public ObdDevice(ObdPort port, Protocol protocol = Protocol.ElmAutomatic)
         {
-            //setup the ports
-            this.port = p;
-            ObdState.Port = p;
-            observers = new List<IObserver<ObdState>>();
-
-            //begin publishing pid data
+            _port = port;
+            //todo: how do we determine protocol? is that done via...?
+            _protocol = protocol;
+            GetSupportedPids();
+            _observers = new List<IObserver<State>>();
             Publish();
         }
 
         private void Publish()
         {
-            publish = true;
-            //loop and publish state as often as possible
-            while (publish)
+            _publish = true;
+            while (_publish)
             {
-                if (observers.Count > 0) {
-                    //async call to build state from OdbPort
+                if (_observers.Count > 0)
+                {
                     PublishState();
                 }
             }
         }
 
-        public IDisposable Subscribe(IObserver<ObdState> observer)
+        private void GetState()
         {
-            if (!observers.Contains(observer))
-                observers.Add(observer);
-            //return an object to allow unsubscription
-            return new Unsubscriber(observers, observer);
+            _state = new State() { };
+
+            foreach (var pid in _supportedPids)    //todo: where are we asking for PIDs? Here?
+            {
+                var pidVal = _port.SendCommand($"{pid.Key} {pid.Value}");
+                _state.PidValues.Add(pid.ToString(), pidVal);
+            }
         }
 
         private void PublishState()
         {
-            foreach (var observer in observers)
+            GetState();
+            foreach (var observer in _observers)
             {
-                //publish state to each subscriber
-                observer.OnNext(ObdState.CurrentState);
+                observer.OnNext(_state);
             }
+        }
+
+        /// <summary>
+        /// Subscribe to publishing events.
+        /// </summary>
+        /// <param name="observer"></param>
+        /// <returns>Unsubscription object.</returns>
+        public IDisposable Subscribe(IObserver<State> observer)
+        {
+            if (!_observers.Contains(observer))
+                _observers.Add(observer);
+            return new Unsubscriber(_observers, observer);
         }
 
         /// <summary>
@@ -60,12 +73,36 @@ namespace Parkwood.Obd
         /// </summary>
         public void EndTransmission()
         {
-            //close observers
-            foreach (var observer in observers.ToArray())
-                if (observers.Contains(observer))
-                    observer.OnCompleted();
-            //adios
-            observers.Clear();
+            foreach (var observer in _observers.ToArray().Where(observer => _observers.Contains(observer)))
+                observer.OnCompleted();
+            _observers.Clear();
+        }
+
+        /// <summary>
+        /// Startup method for asking the ECU for supported PIDs.
+        /// </summary>
+        private void GetSupportedPids()
+        {
+            var supportedPids = new Dictionary<int, List<int>>();
+
+            //get PIDs 1-20 support
+            var result = PidDecoder.ParsePidCmd(_port.SendCommand(new ObdPid(0x01, 0x00).PidCommand), _protocol);
+
+            foreach (var payload in result)
+                supportedPids[payload.Key] = PidDecoder.DecodeSupportedPids(payload.Value, 0x00);
+
+            //get PIDs 21-40 support
+            result = PidDecoder.ParsePidCmd(_port.SendCommand(new ObdPid(0x01, 0x20).PidCommand), _protocol);
+
+            foreach (var payload in result)
+                supportedPids[payload.Key].AddRange(PidDecoder.DecodeSupportedPids(payload.Value, 0x20));
+
+            //get PIDs 21-40 support
+            result = PidDecoder.ParsePidCmd(_port.SendCommand(new ObdPid(0x01, 0x40).PidCommand), _protocol);
+            foreach (var payload in result)
+                supportedPids[payload.Key].AddRange(PidDecoder.DecodeSupportedPids(payload.Value, 0x40));
+
+            _supportedPids = supportedPids;
         }
     }
 }

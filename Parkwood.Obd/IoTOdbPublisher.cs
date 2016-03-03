@@ -1,51 +1,32 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Parkwood.Obd
 {
 
-    public class IoTOdbPublisher : IObserver<ObdState>
+    public class IoTOdbPublisher : StatePublisher
     {
-        private IDisposable unsubscriber;
-        private string instName;
+        private IDisposable _unsubscriber;
 
         public IoTOdbPublisher(string name)
         {
-            this.instName = name;
+            this.Name = name;
         }
 
-        public string Name
-        { get { return this.instName; } }
+        public string Name { get; }
 
-        public virtual void Subscribe(IObservable<ObdState> provider)
-        {
-            if (provider != null)
-                unsubscriber = provider.Subscribe(this);
-        }
+       
+    }
 
-        public virtual void OnCompleted()
-        {
-            this.Unsubscribe();
-        }
+    public class DebugPublisher : StatePublisher
+    {
+        
+    }
 
-        public virtual void OnError(Exception e)
+    public abstract class StatePublisher : IObservable<State>
+    {
+        public IDisposable Subscribe(IObserver<State> observer)
         {
-            //probably need to do more here. 
-            Parkwood.Stuff.Logger.DebugWrite(e.Message);
-        }
-
-        public virtual void OnNext(ObdState value)
-        {
-            //send data to Azure
-            Parkwood.Stuff.Logger.DebugWrite(value.ToJson());
-        }
-
-        public virtual void Unsubscribe()
-        {
-            unsubscriber.Dispose();
+            throw new NotImplementedException();
         }
     }
 }

@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Parkwood.Obd
 {
@@ -90,6 +87,83 @@ namespace Parkwood.Obd
         {
             //Mode and Pid Request(0x01, 0x5c);
             return obdData[0] - 40;
+        }
+
+        public static Dictionary<int, byte[]> ParsePidCmd(string commandResult, Protocol protocol)
+        {
+            var payload = new Dictionary<int, byte[]>();
+            if (commandResult.Contains("NO DATA") || commandResult.Contains("ERROR"))
+            {
+                return null;
+            }
+
+            var ecuResponses = commandResult.Trim().Split('\r');
+
+            foreach (var ecuResponse in ecuResponses)
+            {
+                //todo: what are these for? we need to get the decoding offsets from the original project, I think
+                const int offset = 5;
+                const int ecuByte = 3;
+
+                switch (protocol)
+                {
+                    case Protocol.Unknown:
+                        break;
+                    case Protocol.ElmAutomatic:
+                        break;
+                    case Protocol.SaeJ1850Pwm:
+                        break;
+                    case Protocol.SaeJ1850Vpw:
+                        break;
+                    case Protocol.Iso91412:
+                        break;
+                    case Protocol.Iso142304Kwp5Baud104Kbaud:
+                        break;
+                    case Protocol.Iso142304KwpFast104Kbaud:
+                        break;
+                    case Protocol.Iso157654Can11Bit500Kbaud:
+                        break;
+                    case Protocol.Iso157654Can29Bit500Kbaud:
+                        break;
+                    case Protocol.Iso157654Can11Bit250Kbaud:
+                        break;
+                    case Protocol.Iso157654Can29Bit250Kbaud:
+                        break;
+                    default:
+                        throw new ObdException("Unhandled protocol type.  Feel free to add it and send us the changes!");
+                }
+
+                var strings = ecuResponse.Trim().Split(' ');
+                var bytes = new byte[strings.Length - offset - 1];
+
+                for (var i = offset; i < strings.Length - 1; i++)
+                {
+                    if (!string.IsNullOrWhiteSpace(strings[i]) && !strings[i].Contains("STOPPED"))
+                        bytes[i - offset] = Convert.ToByte(strings[i].Trim(), 16);
+                }
+
+                payload[Convert.ToInt32(strings[ecuByte].Trim(), 16)] = bytes;
+            }
+
+            return payload;
+        }
+
+        public static List<int> DecodeSupportedPids(IReadOnlyList<byte> data, int offset)
+        {
+            var pids = new List<int>();
+
+            if (data == null)
+                return pids;
+
+            for (var byteIdx = 0; byteIdx < data.Count; byteIdx++)
+            {
+                for (var i = 0; i < 8; i++)
+                {
+                    if ((data[byteIdx] << i & 0x80) == 0x80)
+                        pids.Add(byteIdx * 8 + i + 1 + offset);
+                }
+            }
+            return pids;
         }
 
     }

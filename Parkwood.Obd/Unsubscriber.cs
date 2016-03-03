@@ -6,16 +6,15 @@ using System.Threading.Tasks;
 
 namespace Parkwood.Obd
 {
-    //used to remove and dispose subscribers during and unsubscribe call
     internal class Unsubscriber : IDisposable
     {
-        private List<IObserver<ObdState>> _observers;
-        private IObserver<ObdState> _observer;
+        private readonly List<IObserver<State>> _observers;
+        private readonly IObserver<State> _observer;
 
-        public Unsubscriber(List<IObserver<ObdState>> observers, IObserver<ObdState> observer)
+        public Unsubscriber(List<IObserver<State>> observers, IObserver<State> observer)
         {
-            this._observers = observers;
-            this._observer = observer;
+            _observers = observers;
+            _observer = observer;
         }
 
         public void Dispose()

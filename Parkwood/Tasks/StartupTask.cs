@@ -19,7 +19,7 @@ namespace Parkwood.Tasks
 
             ObdPort p = null;
             // Define a provider and two observers.
-            ObdDevice provider = new ObdDevice(p);
+            var provider = new ObdDevice(p);
             IoTOdbPublisher reporter1 = new IoTOdbPublisher("AzureIot");
             reporter1.Subscribe(provider);
 
