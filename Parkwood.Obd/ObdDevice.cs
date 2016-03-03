@@ -120,7 +120,7 @@ namespace Parkwood.Obd
             var xpids = XDocument.Load("WellKnownPids.xml");
             var pids = xpids.Element("Document").Elements("MessageType");
 
-            var pidsForMe = pids.Select(x => new ObdPid() { Mode = byte.Parse("01"), Name = x.Element("Description").Value, Pid = byte.Parse(x.Element("PID").Value) }).ToList();
+            var pidsForMe = pids.Select(x => new ObdPid() { Mode = byte.Parse("01"), Name = x.Element("Name").Value, Pid = byte.Parse(x.Element("PID").Value) }).ToList();
             _desiredPids = pidsForMe;
         }
     }
