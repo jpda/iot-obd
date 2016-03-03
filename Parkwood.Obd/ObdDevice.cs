@@ -12,13 +12,14 @@ namespace Parkwood.Obd
         private List<IObserver<ObdState>> observers;
         private ObdPort port;
         private bool publish;
-
+        public ObdProtocol Protocol { get; set; }
 
         public ObdDevice(ObdPort p)
         {
             //setup the ports
             this.port = p;
             ObdState.Port = p;
+            ObdState.Protocol = this.Protocol;
             observers = new List<IObserver<ObdState>>();
 
             //begin publishing pid data
@@ -51,7 +52,7 @@ namespace Parkwood.Obd
             foreach (var observer in observers)
             {
                 //publish state to each subscriber
-                observer.OnNext(ObdState.CurrentState);
+                observer.OnNext(ObdState.GetCurrentState());
             }
         }
 
