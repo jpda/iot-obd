@@ -10,7 +10,7 @@ namespace Parkwood.Obd
         private readonly List<IObserver<State>> _observers;
         private bool _publish;
         private readonly ObdPort _port;
-        private Dictionary<string, object> _supportedPids = new Dictionary<string, object>();
+        private List<ObdEcu> _ecus = new List<ObdEcu>();
         private List<ObdPid> _desiredPids = new List<ObdPid>();
         private readonly Protocol _protocol;
         private State _state;
@@ -42,11 +42,16 @@ namespace Parkwood.Obd
         {
             _state = new State() { };
 
-            var actualPids = _desiredPids.Where(x => _supportedPids.int)
+            var targetPidList = new List<ObdPid>();
 
-            foreach (var pid in _supportedPids)
+            foreach (var ecu in _ecus)
             {
-                var pidVal = _port.SendCommand($"{pid.Key} {pid.Value}");
+                targetPidList.AddRange(ecu.Pidz.Where(x => _desiredPids.Contains(x)));
+            }
+
+            foreach (var pid in targetPidList)
+            {
+                var pidVal = _port.SendCommand(pid.PidCommand);
                 _state.PidValues.Add(pid.ToString(), pidVal);
             }
         }
@@ -87,32 +92,37 @@ namespace Parkwood.Obd
         /// </summary>
         private void GetSupportedPids()
         {
-            var supportedPids = new Dictionary<string, List<string>>();
+            var pidChunks = new List<string>() { "00", "20", "40" };
 
-            //get PIDs 1-20 support
-            var result = PidDecoder.ParsePidCmd(_port.SendCommand(new ObdPid { Mode = "01", Pid = "00" }.PidCommand), _protocol);
+            var ecus = new List<ObdEcu>();
 
-            foreach (var payload in result)
+            foreach (var chunk in pidChunks)
             {
-                supportedPids[payload.Key] = PidDecoder.DecodeSupportedPids(payload.Value, 0x00);
+                var pidGetResult = PidDecoder.ParsePidCmd(_port.SendCommand(new ObdPid() { Mode = "01", Pid = chunk }.PidCommand), _protocol).ToList();
+                foreach (var ecuLineResponse in pidGetResult)
+                {
+                    var ecu = new ObdEcu();
+                    var ecuExists = ecus.Any(x => x.Id == ecuLineResponse.Key);
+
+                    if (ecuExists)
+            {
+                        ecu = ecus.Single(x => x.Id == ecuLineResponse.Key);
             }
 
-            //get PIDs 21-40 support
-            result = PidDecoder.ParsePidCmd(_port.SendCommand(new ObdPid { Mode = "01", Pid = "20" }.PidCommand), _protocol);
+                    var pidz = PidDecoder.DecodeSupportedPids(ecuLineResponse.Value, 0x00).Select(x => new ObdPid() { Mode = "01", Pid = x.ToString() }).ToList();
 
-            foreach (var payload in result)
+                    if (ecu.Pidz.Any())
             {
-                supportedPids[payload.Key].AddRange(PidDecoder.DecodeSupportedPids(payload.Value, 0x20));
+                        ecu.Pidz.AddRange(pidz);
             }
-
-            //get PIDs 21-40 support
-            result = PidDecoder.ParsePidCmd(_port.SendCommand(new ObdPid { Mode = "01", Pid = "40" }.PidCommand), _protocol);
-            foreach (var payload in result)
+                    else { ecu.Pidz = pidz; }
+                    if (!ecuExists)
             {
-                supportedPids[payload.Key].AddRange(PidDecoder.DecodeSupportedPids(payload.Value, 0x40));
+                        ecus.Add(ecu);
+                    }
+                }
             }
-
-            _supportedPids = supportedPids;
+            _ecus = ecus;
         }
 
         private void GetPreferredPids()
