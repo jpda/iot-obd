@@ -1,8 +1,7 @@
 ﻿using Windows.ApplicationModel.Background;
 using System.Threading;
-
-using Parkwood.Configuration;
 using Parkwood.Obd;
+using Parkwood.Obd.Port;
 
 namespace Parkwood.Tasks
 {
@@ -12,19 +11,17 @@ namespace Parkwood.Tasks
 
         public async void Run(IBackgroundTaskInstance taskInstance)
         {
-            
-            //should figure out what to do with this deferral
             var deferral = taskInstance.GetDeferral();
 
+            while (true)
+            {
+                var btp = new ObdBluetoothPort("OBDLink MX");
+                var provider = new ObdDevice(btp);
+                var debug = new DebugSubscriber();
 
-            ObdPort p = null;
-            // Define a provider and two observers.
-            var provider = new ObdDevice(p);
-            IoTOdbPublisher reporter1 = new IoTOdbPublisher("AzureIot");
-            reporter1.Subscribe(provider);
+                provider.Subscribe(debug);
+            }
 
-            provider.EndTransmission();
-            
             deferral.Complete();
         }
 
