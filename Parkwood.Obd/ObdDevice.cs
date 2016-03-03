@@ -105,19 +105,19 @@ namespace Parkwood.Obd
                     var ecuExists = ecus.Any(x => x.Id == ecuLineResponse.Key);
 
                     if (ecuExists)
-                    {
+            {
                         ecu = ecus.Single(x => x.Id == ecuLineResponse.Key);
-                    }
+            }
 
                     var pidz = PidDecoder.DecodeSupportedPids(ecuLineResponse.Value, 0x00).Select(x => new ObdPid() { Mode = "01", Pid = x.ToString() }).ToList();
 
                     if (ecu.Pidz.Any())
-                    {
+            {
                         ecu.Pidz.AddRange(pidz);
-                    }
+            }
                     else { ecu.Pidz = pidz; }
                     if (!ecuExists)
-                    {
+            {
                         ecus.Add(ecu);
                     }
                 }
@@ -130,7 +130,7 @@ namespace Parkwood.Obd
             var xpids = XDocument.Load("WellKnownPids.xml");
             var pids = xpids.Element("Document").Elements("MessageType");
 
-            var pidsForMe = pids.Select(x => new ObdPid() { Mode = "01", Name = x.Element("Name").Value, Pid = x.Element("PID").Value }).ToList();
+            var pidsForMe = pids.Select(x => new ObdPid() { Mode = byte.Parse("01"), Name = x.Element("Name").Value, Pid = byte.Parse(x.Element("PID").Value) }).ToList();
             _desiredPids = pidsForMe;
         }
     }
