@@ -44,7 +44,7 @@ namespace Parkwood.Obd
             {
                 var pidVal = _port.SendCommand($"{pid.Key} {pid.Value}");
                 _state.PidValues.Add(pid.ToString(), pidVal);
-            }
+        }
         }
 
         private void PublishState()
@@ -54,7 +54,7 @@ namespace Parkwood.Obd
             {
                 observer.OnNext(_state);
             }
-        }
+            }
 
         /// <summary>
         /// Subscribe to publishing events.
@@ -74,7 +74,7 @@ namespace Parkwood.Obd
         public void EndTransmission()
         {
             foreach (var observer in _observers.ToArray().Where(observer => _observers.Contains(observer)))
-                observer.OnCompleted();
+                    observer.OnCompleted();
             _observers.Clear();
         }
 
