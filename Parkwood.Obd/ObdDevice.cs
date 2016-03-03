@@ -10,9 +10,13 @@ namespace Parkwood.Obd
     {
 
         private List<IObserver<ObdState>> observers;
+        private ObdPort port;
+        private bool publish;
 
-        public ObdDevice()
+
+        public ObdDevice(ObdPort p)
         {
+            this.port = p;
             observers = new List<IObserver<ObdState>>();
             //begin publishing pid data
             Publish();
@@ -20,8 +24,9 @@ namespace Parkwood.Obd
 
         private void Publish()
         {
+            publish = true;
             //loop and publish state as often as possible
-            while (true)
+            while (publish)
             {
                 if (observers.Count > 0) {
                     //async call to build state from OdbPort
@@ -42,19 +47,8 @@ namespace Parkwood.Obd
         {
             foreach (var observer in observers)
             {
-                //need to ask OBD for VIN
-                
-                //ask for vin
-                //ask for specific pids. 
-                //add all to state dictionary
-
                 //fill out the state object
-                ObdState state = new ObdState("");
-                Dictionary<string, ObdPid> currentPids = new Dictionary<string, ObdPid>();
-
-               
-                state.Add(p.Name, p);
-                       
+                ObdState state = new ObdState(port);
                 //publish state to each subscriber
                 observer.OnNext(state);
             }
@@ -69,6 +63,7 @@ namespace Parkwood.Obd
             foreach (var observer in observers.ToArray())
                 if (observers.Contains(observer))
                     observer.OnCompleted();
+            //adios
             observers.Clear();
         }
     }

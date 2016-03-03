@@ -16,10 +16,13 @@ namespace Parkwood.Tasks
             //should figure out what to do with this deferral
             var deferral = taskInstance.GetDeferral();
 
+
+            ObdPort p = null;
             // Define a provider and two observers.
-            ObdDevice provider = new ObdDevice();
+            ObdDevice provider = new ObdDevice(p);
             IoTOdbPublisher reporter1 = new IoTOdbPublisher("AzureIot");
             reporter1.Subscribe(provider);
+
             provider.EndTransmission();
             
             deferral.Complete();

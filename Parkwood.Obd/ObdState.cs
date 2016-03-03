@@ -8,20 +8,24 @@ namespace Parkwood.Obd
 {
     public class ObdState: Dictionary<string, object>, IDisposable
     {
-        
-        public ObdState(string vin, object port)
-        {
-            this.VIN = vin;
-            
-        }
-
-        public GetSupportedPids()
-        {
-
-        }
+        ObdPort port;
 
         public string VIN { get; private set; }
         public DateTime Generation = DateTime.Now;
+        public ObdState(ObdPort port)
+        {
+            this.port = port;             
+        }
+
+        public void GetCurrentState()
+        {
+            //ask for vin
+            //ask for supported pids. 
+            //add all to state dictionary
+            //decode known pids
+
+        }
+
 
         public void Dispose()
         {

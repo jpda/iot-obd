@@ -114,6 +114,7 @@
     <Compile Include="ObdException.cs" />
     <Compile Include="OBDPort.cs" />
     <Compile Include="ObdState.cs" />
+    <Compile Include="PidDecoder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Unsubscriber.cs" />
     <EmbeddedResource Include="Properties\Parkwood.Obd.rd.xml" />
