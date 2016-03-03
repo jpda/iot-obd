@@ -6,9 +6,14 @@ using System.Threading.Tasks;
 
 namespace Parkwood.Obd
 {
-    public abstract class ObdPid
+    public class ObdPid
     {
-        public byte[] Raw { get; set; }
+        public ObdPid() { }
+        public ObdPid(byte mode, byte pid) {
+            this.Mode = mode;
+            this.Pid = pid;
+        }
+        public byte[] RawData { get; set; }
         public string Name { get; set; }
         public byte Mode { get; set; }
         public byte Pid { get; set; }

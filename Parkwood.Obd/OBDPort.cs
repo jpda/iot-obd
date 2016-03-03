@@ -7,8 +7,6 @@ namespace Parkwood.Obd
 {
     public abstract class ObdPort
     {
-        private readonly Dictionary<int, List<int>> _supportedPids = new Dictionary<int, List<int>>();
-
         public virtual void Connect()
         {
             Connected = true;
@@ -20,9 +18,10 @@ namespace Parkwood.Obd
         }
         public bool Connected { get; protected set; }
         
-        public abstract void SendCommand(string cmd);
+        public abstract string SendCommand(string cmd);
 
         public abstract Task<string> ReadResponse();
         
     }
 }
+

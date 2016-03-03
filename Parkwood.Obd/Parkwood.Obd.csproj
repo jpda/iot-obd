@@ -113,6 +113,7 @@
     <Compile Include="ObdDevice.cs" />
     <Compile Include="ObdException.cs" />
     <Compile Include="OBDPort.cs" />
+    <Compile Include="ObdProtocol.cs" />
     <Compile Include="ObdState.cs" />
     <Compile Include="PidDecoder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -124,6 +125,9 @@
       <Project>{cbe6ba47-b460-47cb-8346-e8455b8e62be}</Project>
       <Name>Parkwood.Stuff</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="WellKnownPids.xml" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
