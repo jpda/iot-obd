@@ -48,8 +48,8 @@ namespace Coding4Fun.Obd.ObdManager.Universal.Bluetooth
         {
             var writer = new DataWriter(_socket.OutputStream);
             writer.WriteString(cmd);
-            var storeAsyncTask = writer.StoreAsync().AsTask();
-            var bytesWritten = await storeAsyncTask;
+            var writeTask = writer.StoreAsync().AsTask();
+            var bytesWritten = await writeTask;
             Logger.DebugWrite($"Wrote {bytesWritten} bytes.");
         }
 
@@ -144,7 +144,7 @@ namespace Coding4Fun.Obd.ObdManager.Universal.Bluetooth
 
         public override ObdResponse GetPidData(int mode, int pid)
         {
-            //do socket ops
+            
             throw new NotImplementedException();
         }
     }

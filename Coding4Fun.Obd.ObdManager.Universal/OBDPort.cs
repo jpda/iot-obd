@@ -43,8 +43,6 @@ namespace Coding4Fun.Obd.ObdManager.Universal
 
             //todo: SendCommand(mode, pid)? seems like we'd want either some sort of synchronous wait here, or a callback delegate. but also not 100% sure what this method is trying to achieve
 
-            
-
             //lock (_serial)
             //{
             //    string result;

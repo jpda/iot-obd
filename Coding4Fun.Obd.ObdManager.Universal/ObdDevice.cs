@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
+using Windows.Devices.Bluetooth.Advertisement;
 
 namespace Coding4Fun.Obd.ObdManager.Universal
 {
@@ -273,5 +275,55 @@ namespace Coding4Fun.Obd.ObdManager.Universal
         }
 
        
+    }
+
+    public abstract class BasePid : IPid
+    {
+        protected BasePid(object rawValue)
+        {
+            RawValue = rawValue;
+        }
+
+        public string RequestIdentity { get; set; }
+
+        public object RawValue { get; set; }
+
+        protected abstract void ComputeValue();
+    }
+
+    public interface IPid
+    {
+        string RequestIdentity { get; set; }
+
+        object RawValue { get; set; }
+
+    }
+
+    public class Pid
+    {
+        public T GetComputedValue<T>(string name, Func<byte[], T> translator)
+        {
+            var things = new Dictionary<string, byte[]>() { { "Rpm", new byte[8] } };
+            var value = things[name];
+
+            var result = translator(value);
+            return result;
+        }
+
+        public void DoThing()
+        {
+            var stuff = GetComputedValue("vin", x => Encoding.ASCII.GetString(x));
+            var rpm = GetComputedValue("rpm", x =>
+            {
+                var rpmString = Encoding.ASCII.GetString(x);
+                var rpmNumber = int.Parse(rpmString);
+                return rpmNumber * 140 * 120;
+            });
+        }
+
+        public string GetValue(byte[] stuff)
+        {
+            return Encoding.ASCII.GetString(stuff);
+        }
     }
 }
