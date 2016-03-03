@@ -100,6 +100,7 @@
   <ItemGroup>
     <Compile Include="Configuration\ConfigurationManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <None Include="StartupTaskOld.csold" />
     <Compile Include="Tasks\StartupTask.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -139,9 +140,13 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Coding4Fun.Obd.ObdManager.Universal\Coding4Fun.Obd.ObdManager.Universal.csproj">
-      <Project>{1a5d7481-cfc5-44db-abda-575f076ff9a3}</Project>
-      <Name>Coding4Fun.Obd.ObdManager.Universal</Name>
+    <ProjectReference Include="..\Parkwood.Obd\Parkwood.Obd.csproj">
+      <Project>{b7b4137d-9a70-4f99-8d5f-d9486bb97970}</Project>
+      <Name>Parkwood.Obd</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Parkwood.Stuff\Parkwood.Stuff.csproj">
+      <Project>{cbe6ba47-b460-47cb-8346-e8455b8e62be}</Project>
+      <Name>Parkwood.Stuff</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

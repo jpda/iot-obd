@@ -10,6 +10,7 @@ namespace Coding4Fun.Obd.ObdManager.Universal
         public event EventHandler<ConnectionChangedEventArgs> ObdConnectionChanged;
 
         public ObdPort ObdPort { get; set; }
+        public bool Connected { get; private set; }
 
         private Dictionary<int, List<int>> _supportedPids = new Dictionary<int, List<int>>();
         private int _currentEcu;
@@ -22,22 +23,47 @@ namespace Coding4Fun.Obd.ObdManager.Universal
         }
         private void Connect()
         {
+            //shoudl be implemented in async likely
             ObdPort.Connect();
+
             if (Convert.ToInt32(ObdPort.Protocol) > 9 || ObdPort.Protocol != Protocol.Unknown)
                 throw new ArgumentOutOfRangeException(ObdPort.Protocol.ToString(), "Protocol must be a value between of known type Int(1 and 9), inclusive.");
             if (ObdPort == null)
             {
                 throw new ObdException("OBDPort not speficied.");
             }
+            if (ObdPort.Connected)
+            {
+                InitializeDevice();
+                this.Connected = true;
+            }
+            else
+            {
+                if (ObdPort == null)
+                {
+                    throw new ObdException("OBDPort connect failed.");
+                }
+            }
 
-            ObdPort.Connect();
-            GetSupportedPids();
-            FireConnectionChangedEvent(ObdPort.Connected);
-
-            ObdPort.Connect();
             FireConnectionChangedEvent(ObdPort.Connected);
 
         }
+
+
+        private void InitializeDevice()
+        {
+            //new List<string>() { "ATZ", "ATE0", "ATL0", "ATH1", "ATSP 5" }.ForEach(SendCommand);
+            GetSupportedPids();
+        }
+
+        public string SendCommand(string command)
+        {
+            //command send
+            this.ObdPort.SendCommand(command);
+            //find response
+            return "";
+        }
+
         public void Disconnect()
         {
             ObdPort.Disconnect();
@@ -79,6 +105,8 @@ namespace Coding4Fun.Obd.ObdManager.Universal
             }
             return pids;
         }
+
+
         public ObdState GetCurrentState()
         {
             var os = new ObdState();
@@ -245,6 +273,8 @@ namespace Coding4Fun.Obd.ObdManager.Universal
                 return UnsupportedPidValue;
             return result[_currentEcu][0] - 40;
         }
+
+       
     }
 
     public abstract class BasePid : IPid

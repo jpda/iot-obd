@@ -1,0 +1,165 @@
+<?xml version="1.0" ?>
+   <Document>
+         <MessageType>
+               <PID>00</PID>
+               <Data_bytes_returned>4</Data_bytes_returned>
+               <Description>PIDs supported [01 - 20]</Description>
+               <Min_value></Min_value>
+               <Max_value></Max_value>
+               <Units></Units>
+               <Formula>Bit encoded [A7..D0] == [PID $01..PID $20]</Formula>
+         </MessageType>
+         <MessageType>
+               <PID>01</PID>
+               <Data_bytes_returned>4</Data_bytes_returned>
+               <Description>Monitor status since DTCs cleared. (Includes malfunction indicator lamp (MIL) status and number of DTCs.)</Description>
+               <Min_value></Min_value>
+               <Max_value></Max_value>
+               <Units></Units>
+               <Formula>Bit encoded.</Formula>
+         </MessageType>
+         <MessageType>
+               <PID>02</PID>
+               <Data_bytes_returned>2</Data_bytes_returned>
+               <Description>Freeze DTC</Description>
+               <Min_value></Min_value>
+               <Max_value></Max_value>
+               <Units></Units>
+               <Formula></Formula>
+         </MessageType>
+         <MessageType>
+               <PID>03</PID>
+               <Data_bytes_returned>2</Data_bytes_returned>
+               <Description>Fuel system status</Description>
+               <Min_value></Min_value>
+               <Max_value></Max_value>
+               <Units></Units>
+               <Formula>Bit encoded. See below</Formula>
+         </MessageType>
+         <MessageType>
+               <PID>04</PID>
+               <Data_bytes_returned>1</Data_bytes_returned>
+               <Description>Calculated engine load value</Description>
+               <Min_value>0</Min_value>
+               <Max_value>100</Max_value>
+               <Units>%</Units>
+               <Formula>A*100/255</Formula>
+         </MessageType>
+         <MessageType>
+               <PID>05</PID>
+               <Data_bytes_returned>1</Data_bytes_returned>
+               <Description>Engine coolant temperature</Description>
+               <Min_value>-40</Min_value>
+               <Max_value>215</Max_value>
+               <Units>°C</Units>
+               <Formula>A-40</Formula>
+         </MessageType>
+         <MessageType>
+               <PID>06</PID>
+               <Data_bytes_returned>1</Data_bytes_returned>
+               <Description>Short term fuel % trim—Bank 1</Description>
+               <Min_value>-100 Subtracting Fuel (Rich Condition)</Min_value>
+               <Max_value>99.22 Adding Fuel (Lean Condition)</Max_value>
+               <Units>%</Units>
+               <Formula>(A-128) * 100/128</Formula>
+         </MessageType>
+         <MessageType>
+               <PID>07</PID>
+               <Data_bytes_returned>1</Data_bytes_returned>
+               <Description>Long term fuel % trim—Bank 1</Description>
+               <Min_value>-100 Subtracting Fuel (Rich Condition)</Min_value>
+               <Max_value>99.22 Adding Fuel (Lean Condition)</Max_value>
+               <Units>%</Units>
+               <Formula>(A-128) * 100/128</Formula>
+         </MessageType>
+         <MessageType>
+               <PID>08</PID>
+               <Data_bytes_returned>1</Data_bytes_returned>
+               <Description>Short term fuel % trim—Bank 2</Description>
+               <Min_value>-100 Subtracting Fuel (Rich Condition)</Min_value>
+               <Max_value>99.22 Adding Fuel (Lean Condition)</Max_value>
+               <Units>%</Units>
+               <Formula>(A-128) * 100/128</Formula>
+         </MessageType>
+         <MessageType>
+               <PID>09</PID>
+               <Data_bytes_returned>1</Data_bytes_returned>
+               <Description>Long term fuel % trim—Bank 2</Description>
+               <Min_value>-100 Subtracting Fuel (Rich Condition)</Min_value>
+               <Max_value>99.22 Adding Fuel (Lean Condition)</Max_value>
+               <Units>%</Units>
+               <Formula>(A-128) * 100/128</Formula>
+         </MessageType>
+         <MessageType>
+               <PID>0A</PID>
+               <Data_bytes_returned>1</Data_bytes_returned>
+               <Description>Fuel pressure</Description>
+               <Min_value>0</Min_value>
+               <Max_value>765</Max_value>
+               <Units>kPa (gauge)</Units>
+               <Formula>A*3</Formula>
+         </MessageType>
+         <MessageType>
+               <PID>0B</PID>
+               <Data_bytes_returned>1</Data_bytes_returned>
+               <Description>Intake manifold absolute pressure</Description>
+               <Min_value>0</Min_value>
+               <Max_value>255</Max_value>
+               <Units>kPa (absolute)</Units>
+               <Formula>A</Formula>
+         </MessageType>
+         <MessageType>
+               <PID>0C</PID>
+               <Data_bytes_returned>2</Data_bytes_returned>
+               <Description>Engine RPM</Description>
+               <Min_value>0</Min_value>
+               <Max_value>16,383.75</Max_value>
+               <Units>rpm</Units>
+               <Formula>((A*256)+B)/4</Formula>
+         </MessageType>
+         <MessageType>
+               <PID>0D</PID>
+               <Data_bytes_returned>1</Data_bytes_returned>
+               <Description>Vehicle speed</Description>
+               <Min_value>0</Min_value>
+               <Max_value>255</Max_value>
+               <Units>km/h</Units>
+               <Formula>A</Formula>
+         </MessageType>
+         <MessageType>
+               <PID>0E</PID>
+               <Data_bytes_returned>1</Data_bytes_returned>
+               <Description>Timing advance</Description>
+               <Min_value>-64</Min_value>
+               <Max_value>63.5</Max_value>
+               <Units>° relative to #1 cylinder</Units>
+               <Formula>(A-128)/2</Formula>
+         </MessageType>
+         <MessageType>
+               <PID>0F</PID>
+               <Data_bytes_returned>1</Data_bytes_returned>
+               <Description>Intake air temperature</Description>
+               <Min_value>-40</Min_value>
+               <Max_value>215</Max_value>
+               <Units>°C</Units>
+               <Formula>A-40</Formula>
+         </MessageType>
+         <MessageType>
+               <PID>10</PID>
+               <Data_bytes_returned>2</Data_bytes_returned>
+               <Description>MAF air flow rate</Description>
+               <Min_value>0</Min_value>
+               <Max_value>655.35</Max_value>
+               <Units>grams/sec</Units>
+               <Formula>((A*256)+B) / 100</Formula>
+         </MessageType>
+         <MessageType>
+               <PID>11</PID>
+               <Data_bytes_returned>1</Data_bytes_returned>
+               <Description>Throttle position</Description>
+               <Min_value>0</Min_value>
+               <Max_value>100</Max_value>
+               <Units>%</Units>
+               <Formula>A*100/255</Formula>
+         </MessageType>
+   </Document>

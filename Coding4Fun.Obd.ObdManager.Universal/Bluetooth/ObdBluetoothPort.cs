@@ -130,7 +130,7 @@ namespace Coding4Fun.Obd.ObdManager.Universal.Bluetooth
                 {
                     var msg = $"Connected to {_socket.Information.RemoteAddress.DisplayName}!";
                     Logger.DebugWrite(msg);
-                    InitializeDevice();
+                    
                 }
             }
             catch (Exception ex)
@@ -141,11 +141,6 @@ namespace Coding4Fun.Obd.ObdManager.Universal.Bluetooth
             }
         }
 
-        private void InitializeDevice()
-        {
-            new List<string>() { "ATZ", "ATE0", "ATL0", "ATH1", "ATSP 5" }.ForEach(SendCommand);
-            Connected = true;
-        }
 
         public override ObdResponse GetPidData(int mode, int pid)
         {
