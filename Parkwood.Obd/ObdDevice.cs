@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Xml.Linq;
 
 namespace Parkwood.Obd
@@ -15,15 +16,22 @@ namespace Parkwood.Obd
         private readonly Protocol _protocol;
         private State _state;
 
-        public ObdDevice(ObdPort port, Protocol protocol = Protocol.ElmAutomatic)
+        public ObdDevice(ObdPort port, Protocol protocol = Protocol.Iso157654Can11Bit500Kbaud)
         {
             _port = port;
             //todo: how do we determine protocol? is that done via...?
             _protocol = protocol;
+            _port.Connect();
+            Init();
             GetSupportedPids();
             GetPreferredPids();
             _observers = new List<IObserver<State>>();
             Publish();
+        }
+
+        private void Init()
+        {
+            new List<string>() { "ATZ", "ATE0", "ATL0", "ATSP6", "ATH1" }.ForEach(x=> _port.SendCommand(x));
         }
 
         private void Publish()

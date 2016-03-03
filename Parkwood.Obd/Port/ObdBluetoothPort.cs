@@ -21,11 +21,11 @@ namespace Parkwood.Obd.Port
             _deviceName = deviceName;
         }
 
-        public override async void Connect()
+        public override void Connect()
         {
             try
             {
-                var devices = await DeviceInformation.FindAllAsync(RfcommDeviceService.GetDeviceSelector(RfcommServiceId.SerialPort));
+                var devices = Task.Run(async () => await DeviceInformation.FindAllAsync(RfcommDeviceService.GetDeviceSelector(RfcommServiceId.SerialPort))).Result;
                 var device = devices.Where(x => x.Name.ToLower().Contains(_deviceName.ToLower())).ToList();
 
                 if (!device.Any())
@@ -34,7 +34,7 @@ namespace Parkwood.Obd.Port
                     return;
                 }
 
-                await ConnectDeviceAsync(device.Single());
+                Task.Run(async() => await ConnectDeviceAsync(device.Single())).Wait();
             }
             catch (Exception ex)
             {
@@ -46,13 +46,11 @@ namespace Parkwood.Obd.Port
         public override string SendCommand(string cmd)
         {
             var writer = new DataWriter(_socket.OutputStream);
-            writer.WriteString(cmd);
-            var writeTask = writer.StoreAsync().AsTask();
-            //todo: hack
-            var bytesWritten = Task.Run(async () => await writeTask).Result;
-            Logger.DebugWrite($"Wrote {bytesWritten} bytes.");
-
-            return ReadResponse().Result;
+            writer.WriteString(cmd + "\r\n");
+            var bytesWritten = Task.Run(async () => await writer.StoreAsync()).Result;
+            Logger.DebugWrite($"Wrote {bytesWritten} bytes: {cmd}");
+            var response = Task.Run(async () => await ReadResponse()).Result;
+            return response;
         }
 
         public override async Task<string> ReadResponse()
@@ -62,11 +60,25 @@ namespace Parkwood.Obd.Port
                 var cancellationToken = new CancellationTokenSource();
                 if (_socket.InputStream != null)
                 {
-                    while (true)
+                    const uint readBufferLength = 1024;
+
+                    var reader = new DataReader(_socket.InputStream) { InputStreamOptions = InputStreamOptions.Partial };
+                    var bytesRead = await reader.LoadAsync(readBufferLength);
+                    
+
+                    if (bytesRead <= 0) return string.Empty;
+
+                    try
                     {
-                        var response = await ReadAsync(cancellationToken.Token);
+                        var response = reader.ReadString(bytesRead);
+                        Logger.DebugWrite(response);
                         return response;
                     }
+                    catch (Exception ex)
+                    {
+                        Logger.DebugWrite("ReadAsync: " + ex.Message);
+                    }
+                    return string.Empty;
                 }
             }
             catch (Exception ex)
@@ -80,29 +92,6 @@ namespace Parkwood.Obd.Port
                     Logger.DebugWrite("Listen: " + ex.Message);
                 }
             }
-            return string.Empty;
-        }
-
-        private async Task<string> ReadAsync(CancellationToken token)
-        {
-            const uint readBufferLength = 1024;
-
-            token.ThrowIfCancellationRequested();
-            var reader = new DataReader(_socket.InputStream) { InputStreamOptions = InputStreamOptions.Partial };
-            var loadAsyncTask = reader.LoadAsync(readBufferLength).AsTask(token);
-            var bytesRead = await loadAsyncTask;
-
-            if (bytesRead <= 0) return string.Empty;
-
-            try
-            {
-                return reader.ReadString(bytesRead);
-            }
-            catch (Exception ex)
-            {
-                Logger.DebugWrite("ReadAsync: " + ex.Message);
-            }
-
             return string.Empty;
         }
 
