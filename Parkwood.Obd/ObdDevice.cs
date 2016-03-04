@@ -31,7 +31,7 @@ namespace Parkwood.Obd
 
         private void Init()
         {
-            new List<string>() { "ATZ", "ATE0", "ATL0", "ATSP6", "ATH1" }.ForEach(x => _port.SendCommand(x));
+            new List<string>() { "ATZ", "ATE0", "ATL0", "ATSP6", "ATH1" }.ForEach(x => System.Diagnostics.Debug.WriteLine(_port.SendCommand(x)));
         }
 
         private void Publish()
