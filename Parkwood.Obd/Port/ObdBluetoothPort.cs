@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Linq;
-using System.Threading;
+using System.Text;
 using System.Threading.Tasks;
 using Windows.Devices.Bluetooth.Rfcomm;
 using Windows.Devices.Enumeration;
@@ -34,7 +34,7 @@ namespace Parkwood.Obd.Port
                     return;
                 }
 
-                Task.Run(async() => await ConnectDeviceAsync(device.Single())).Wait();
+                Task.Run(async () => await ConnectDeviceAsync(device.Single())).Wait();
             }
             catch (Exception ex)
             {
@@ -55,40 +55,26 @@ namespace Parkwood.Obd.Port
 
         public override async Task<string> ReadResponse()
         {
-            try
+            if (_socket.InputStream == null) return string.Empty;
+            const uint readBufferLength = 1024;
+            using (var reader = new DataReader(_socket.InputStream) { InputStreamOptions = InputStreamOptions.Partial })
             {
-                var cancellationToken = new CancellationTokenSource();
-                if (_socket.InputStream != null)
+                await reader.LoadAsync(readBufferLength);
+                try
                 {
-                    const uint readBufferLength = 1024;
-
-                    var reader = new DataReader(_socket.InputStream) { InputStreamOptions = InputStreamOptions.Partial };
-                    var bytesRead = await reader.LoadAsync(readBufferLength);
-
-                    if (bytesRead <= 0) return string.Empty;
-
-                    try
+                    var response = new StringBuilder();
+                    while (reader.UnconsumedBufferLength > 0)
                     {
-                        var response = reader.ReadString(bytesRead);
-                        Logger.DebugWrite(response);
-                        return response;
+                        response.Append(reader.ReadString(reader.UnconsumedBufferLength));
+                        await reader.LoadAsync(readBufferLength);
                     }
-                    catch (Exception ex)
-                    {
-                        Logger.DebugWrite("ReadAsync: " + ex.Message);
-                    }
-                    return string.Empty;
+
+                    Logger.DebugWrite(response.ToString());
+                    return response.ToString();
                 }
-            }
-            catch (Exception ex)
-            {
-                if (ex.GetType().Name == "TaskCanceledException")
+                catch (Exception ex)
                 {
-                    Logger.DebugWrite("Listen: Reading task was cancelled, closing device and cleaning up");
-                }
-                else
-                {
-                    Logger.DebugWrite("Listen: " + ex.Message);
+                    Logger.DebugWrite("ReadAsync: " + ex.Message);
                 }
             }
             return string.Empty;
@@ -96,7 +82,6 @@ namespace Parkwood.Obd.Port
 
         private async Task ConnectDeviceAsync(DeviceInformation pairedDevice)
         {
-            var success = false;
             try
             {
                 _service = Task.Run(async () => await RfcommDeviceService.FromIdAsync(pairedDevice.Id)).Result;
@@ -105,6 +90,7 @@ namespace Parkwood.Obd.Port
                 _socket?.Dispose();
                 _socket = new StreamSocket();
 
+                var success = false;
                 try
                 {
                     await _socket.ConnectAsync(_service.ConnectionHostName, _service.ConnectionServiceName);
