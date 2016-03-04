@@ -49,6 +49,7 @@ namespace Parkwood.Obd.Port
             writer.WriteString(cmd + "\r\n");
             var bytesWritten = Task.Run(async () => await writer.StoreAsync()).Result;
             Logger.DebugWrite($"Wrote {bytesWritten} bytes: {cmd}");
+            Task.Delay(100);
             var response = Task.Run(async () => await ReadResponse()).Result;
             return response;
         }
@@ -57,26 +58,20 @@ namespace Parkwood.Obd.Port
         {
             if (_socket.InputStream == null) return string.Empty;
             const uint readBufferLength = 1024;
-            using (var reader = new DataReader(_socket.InputStream) { InputStreamOptions = InputStreamOptions.Partial })
+            var reader = new DataReader(_socket.InputStream) { InputStreamOptions = InputStreamOptions.Partial };
+            var bytesRead = await reader.LoadAsync(readBufferLength);
+            try
             {
-                await reader.LoadAsync(readBufferLength);
-                try
-                {
-                    var response = new StringBuilder();
-                    while (reader.UnconsumedBufferLength > 0)
-                    {
-                        response.Append(reader.ReadString(reader.UnconsumedBufferLength));
-                        await reader.LoadAsync(readBufferLength);
-                    }
-
-                    Logger.DebugWrite(response.ToString());
-                    return response.ToString();
-                }
-                catch (Exception ex)
-                {
-                    Logger.DebugWrite("ReadAsync: " + ex.Message);
-                }
+                var response = reader.ReadString(bytesRead);
+                Logger.DebugWrite(response.ToString());
+                return response.ToString();
             }
+            catch (Exception ex)
+            {
+                Logger.DebugWrite("ReadAsync: " + ex.Message);
+            }
+            reader.DetachStream();
+            reader.Dispose();
             return string.Empty;
         }
 

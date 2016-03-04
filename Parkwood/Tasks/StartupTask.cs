@@ -20,6 +20,7 @@ namespace Parkwood.Tasks
                 var debug = new DebugSubscriber();
 
                 provider.Subscribe(debug);
+                provider.Startup();
             }
 
             deferral.Complete();
