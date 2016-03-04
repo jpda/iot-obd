@@ -64,7 +64,6 @@ namespace Parkwood.Obd.Port
 
                     var reader = new DataReader(_socket.InputStream) { InputStreamOptions = InputStreamOptions.Partial };
                     var bytesRead = await reader.LoadAsync(readBufferLength);
-                    
 
                     if (bytesRead <= 0) return string.Empty;
 

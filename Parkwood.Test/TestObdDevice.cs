@@ -1,5 +1,6 @@
 ﻿using System;
-using System.Diagnostics;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Parkwood.Obd;
 
@@ -26,24 +27,45 @@ namespace Parkwood.Test
         }
     }
 
-    internal class TestObdPublisher : IObserver<State>
+    internal class TextObdPort : ObdPort
     {
-        public string State { get; set; }
+        private readonly List<string> _lines;
+        private readonly Dictionary<string, List<string>> _pidData = new Dictionary<string, List<string>>();
 
-        public void OnCompleted()
+        public TextObdPort(IEnumerable<string> lines)
         {
-            Debug.WriteLine("oncompleted");
+            _lines = lines.ToList();
+            ParseText();
         }
 
-        public void OnError(Exception error)
+        private void ParseText()
         {
-            Debug.WriteLine(error.Message);
+            var pids = _lines.Where(x => x.StartsWith("PID:")).Select(y => y.Substring(0, y.IndexOf(',')));
+            var uniquePids = pids.Distinct();
+            foreach (var p in uniquePids)
+            {
+                _pidData.Add(p, new List<string>());
+            }
+
+            foreach (var p in _lines)
+            {
+                
+            }
         }
 
-        public void OnNext(State value)
+        public override string SendCommand(string cmd)
         {
-            State = value.ToJson();
-            Debug.WriteLine(value.ToJson());
+            var command = cmd.Split(' ');
+            var mode = command[0];
+            var pid = command[1];
+            var data = _pidData[pid];
+            var r = new Random();
+            return data[r.Next(data.Count - 1)]; //get a random data point
+        }
+
+        public override Task<string> ReadResponse()
+        {
+            throw new NotImplementedException();
         }
     }
 }

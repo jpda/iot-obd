@@ -31,7 +31,7 @@ namespace Parkwood.Obd
 
         private void Init()
         {
-            new List<string>() { "ATZ", "ATE0", "ATL0", "ATSP6", "ATH1" }.ForEach(x=> _port.SendCommand(x));
+            new List<string>() { "ATZ", "ATE0", "ATL0", "ATSP6", "ATH1" }.ForEach(x => _port.SendCommand(x));
         }
 
         private void Publish()
@@ -113,19 +113,19 @@ namespace Parkwood.Obd
                     var ecuExists = ecus.Any(x => x.Id == ecuLineResponse.Key);
 
                     if (ecuExists)
-            {
+                    {
                         ecu = ecus.Single(x => x.Id == ecuLineResponse.Key);
-            }
+                    }
 
                     var pidz = PidDecoder.DecodeSupportedPids(ecuLineResponse.Value, 0x00).Select(x => new ObdPid() { Mode = "01", Pid = x.ToString() }).ToList();
 
                     if (ecu.Pidz.Any())
-            {
+                    {
                         ecu.Pidz.AddRange(pidz);
-            }
+                    }
                     else { ecu.Pidz = pidz; }
                     if (!ecuExists)
-            {
+                    {
                         ecus.Add(ecu);
                     }
                 }
