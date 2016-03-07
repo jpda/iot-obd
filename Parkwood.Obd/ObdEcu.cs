@@ -5,6 +5,9 @@ namespace Parkwood.Obd
     public struct ObdEcu
     {
         public int Id { get; set; }
-        public List<ObdPid> Pidz { get; set; }
+
+        public List<ObdPid> SupportedPids { get; set; }
+
+        public List<ObdPidValue> State { get; set; } 
     }
 }
