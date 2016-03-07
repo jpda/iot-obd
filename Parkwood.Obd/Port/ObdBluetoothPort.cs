@@ -6,6 +6,7 @@ using Windows.Devices.Enumeration;
 using Windows.Networking.Sockets;
 using Windows.Storage.Streams;
 using Parkwood.Stuff;
+using System.Text;
 
 namespace Parkwood.Obd.Port
 {
@@ -48,29 +49,38 @@ namespace Parkwood.Obd.Port
             writer.WriteString(cmd + "\r\n");
             var bytesWritten = Task.Run(async () => await writer.StoreAsync()).Result;
             Logger.DebugWrite($"Wrote {bytesWritten} bytes: {cmd}");
-            Task.Delay(100);
-            var response = Task.Run(async () => await ReadResponse()).Result;
-            return response;
+            Task.Delay(500);
+            var data = new StringBuilder();
+            var done = false;
+            while (!done)
+            {
+                var response = Task.Run(async () => await ReadResponse()).Result;
+                data.Append(response);
+                done = response.Contains(">");
+            }
+            writer.DetachStream();
+            return data.ToString();
         }
 
         public override async Task<string> ReadResponse()
         {
-            if (_socket.InputStream == null) return string.Empty;
-            const uint readBufferLength = 1024; //todo: would a response ever be more than 1kB? i don't think so, but know we should loop through the buffer if we get one larger. taking the assumption that won't happen.
-            var reader = new DataReader(_socket.InputStream) { InputStreamOptions = InputStreamOptions.Partial };
-            var bytesRead = await reader.LoadAsync(readBufferLength);
             try
             {
+                if (_socket.InputStream == null) return string.Empty;
+                const uint readBufferLength = 1024; //todo: would a response ever be more than 1kB? i don't think so, but know we should loop through the buffer if we get one larger. taking the assumption that won't happen.
+                var reader = new DataReader(_socket.InputStream) { InputStreamOptions = InputStreamOptions.Partial };
+                var bytesRead = await reader.LoadAsync(readBufferLength);
+
                 var response = reader.ReadString(bytesRead);
                 Logger.DebugWrite(response);
+                reader.DetachStream();
                 return response;
             }
             catch (Exception ex)
             {
                 Logger.DebugWrite("ReadAsync: " + ex.Message);
             }
-            reader.DetachStream();
-            reader.Dispose();
+            //reader.Dispose();
             return string.Empty;
         }
 
