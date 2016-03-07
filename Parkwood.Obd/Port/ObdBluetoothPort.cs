@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Windows.Devices.Bluetooth.Rfcomm;
 using Windows.Devices.Enumeration;
@@ -63,8 +62,8 @@ namespace Parkwood.Obd.Port
             try
             {
                 var response = reader.ReadString(bytesRead);
-                Logger.DebugWrite(response.ToString());
-                return response.ToString();
+                Logger.DebugWrite(response);
+                return response;
             }
             catch (Exception ex)
             {
