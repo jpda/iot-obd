@@ -39,9 +39,8 @@ namespace Parkwood.Obd
             //todo: LOL this is ridiculous
             get
             {
-                var undecodedValue = Encoding.ASCII.GetString(RawData);
                 var conversions = typeof(PidDecoder).GetMethods(BindingFlags.Public).Where(x => x.Name == ConversionFunctionName).ToList();
-                if (!conversions.Any() || conversions.Count > 1) { return undecodedValue; }
+                if (!conversions.Any() || conversions.Count > 1) { return Encoding.ASCII.GetString(RawData); }
                 var conversion = conversions.Single();
                 return conversion.Invoke(null, new object[] { RawData }) as string;
             }
