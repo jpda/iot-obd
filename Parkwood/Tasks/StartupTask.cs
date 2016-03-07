@@ -25,7 +25,6 @@ namespace Parkwood.Tasks
             provider.Subscribe(iot);
 
             provider.Startup();
-            deferral.Complete();
         }
 
     }
