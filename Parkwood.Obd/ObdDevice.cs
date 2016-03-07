@@ -56,6 +56,7 @@ namespace Parkwood.Obd
 
             var targetPidList = new List<ObdPid>();
 
+            //todo: fix this to get an actual PID list
             foreach (var ecu in _ecus)
             {
                 targetPidList.AddRange(ecu.Pidz.Where(y => _desiredPids.Select(x => x.Pid).Contains(y.Pid)));

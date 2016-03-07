@@ -10,7 +10,8 @@ namespace Parkwood.Obd
             PidValues = pidVals; //should probably do something here to keep this readonly outside of here. like a view wrapper but whatever
             SnapshotTime = DateTime.UtcNow;
             Vin = ""; //get from PidValues?
-                }
+        }
+
         private string Vin { get; set; }
 
         public DateTime SnapshotTime { get; set; }
