@@ -117,7 +117,6 @@
     <Compile Include="ObdDevice.cs" />
     <Compile Include="ObdException.cs" />
     <Compile Include="OBDPort.cs" />
-    <Compile Include="ObdProtocol.cs" />
     <Compile Include="Port\ObdBluetoothPort.cs" />
     <Compile Include="ObdState.cs" />
     <Compile Include="PidDecoder.cs" />
