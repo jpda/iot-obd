@@ -10,7 +10,7 @@ namespace Parkwood.Test
         public void TestMethod1()
         {
             var device = new TestObdDevice(new TestObdPort());
-            var subscriber = new TestObdPublisher();
+            var subscriber = new TestSubscriber();
             var unsubscriber = device.Subscribe(subscriber);
             Assert.IsNotNull(subscriber.State);
         }
