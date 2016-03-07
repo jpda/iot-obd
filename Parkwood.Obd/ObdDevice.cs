@@ -18,20 +18,24 @@ namespace Parkwood.Obd
 
         public ObdDevice(ObdPort port, Protocol protocol = Protocol.Iso157654Can11Bit500Kbaud)
         {
+            _observers = new List<IObserver<State>>();
             _port = port;
             //todo: how do we determine protocol? is that done via...?
             _protocol = protocol;
             _port.Connect();
+        }
+
+        public void Startup()
+        {
             Init();
             GetSupportedPids();
             GetPreferredPids();
-            _observers = new List<IObserver<State>>();
             Publish();
         }
 
         private void Init()
         {
-            new List<string>() { "ATZ", "ATE0", "ATL0", "ATSP6", "ATH1" }.ForEach(x => _port.SendCommand(x));
+            new List<string>() { "ATZ", "ATE0", "ATL0", "ATSP6", "ATH1" }.ForEach(x => System.Diagnostics.Debug.WriteLine(_port.SendCommand(x)));
         }
 
         private void Publish()
@@ -54,7 +58,7 @@ namespace Parkwood.Obd
 
             foreach (var ecu in _ecus)
             {
-                targetPidList.AddRange(ecu.Pidz.Where(x => _desiredPids.Contains(x)));
+                targetPidList.AddRange(ecu.Pidz.Where(y => _desiredPids.Select(x => x.Pid).Contains(y.Pid)));
             }
 
             foreach (var pid in targetPidList)
@@ -119,7 +123,7 @@ namespace Parkwood.Obd
 
                     var pidz = PidDecoder.DecodeSupportedPids(ecuLineResponse.Value, 0x00).Select(x => new ObdPid() { Mode = "01", Pid = x.ToString() }).ToList();
 
-                    if (ecu.Pidz.Any())
+                    if (ecu.Pidz == null ? false : ecu.Pidz.Any())
                     {
                         ecu.Pidz.AddRange(pidz);
                     }
@@ -135,7 +139,7 @@ namespace Parkwood.Obd
 
         private void GetPreferredPids()
         {
-            var xpids = XDocument.Load("WellKnownPids.xml");
+            var xpids = XDocument.Load("Assets/WellKnownPids.xml");
             var pids = xpids.Element("Document").Elements("MessageType");
 
             var pidsForMe = pids.Select(x => new ObdPid() { Mode = "01", Name = x.Element("Name").Value, Pid = x.Element("PID").Value }).ToList();

@@ -105,8 +105,10 @@
   <ItemGroup>
     <!-- A reference to the entire .Net Framework and Windows SDK are automatically included -->
     <None Include="project.json" />
+    <None Include="Service References\Parkwood-Iot-Hub\ConnectedService.json" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AzureIoTHub.cs" />
     <Compile Include="ObdEcu.cs" />
     <Compile Include="ObdPid.cs" />
     <Compile Include="Extensions.cs" />
@@ -129,7 +131,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="WellKnownPids.xml" />
+    <Content Include="WellKnownPids.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System.Collections">
@@ -138,6 +142,9 @@
     <Reference Include="System.Runtime">
       <HintPath>..\..\..\..\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETPortable\v4.6\System.Runtime.dll</HintPath>
     </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

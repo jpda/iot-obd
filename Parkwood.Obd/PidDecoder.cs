@@ -102,6 +102,10 @@ namespace Parkwood.Obd
 
             foreach (var ecuResponse in ecus)
             {
+                if (string.IsNullOrEmpty(ecuResponse) || ecuResponse == ">") continue;
+
+                var cleaned = ecuResponse.Replace(">", string.Empty);
+
                 int offset;
                 int ecuByte;
 
@@ -124,7 +128,7 @@ namespace Parkwood.Obd
                 }
 
 
-                var strings = ecuResponse.Trim().Split(' ');
+                var strings = cleaned.Trim().Split(' ');
                 var bytes = new byte[strings.Length - offset]; // get rid of the header and the trailing checksum byte
 
                 for (var i = offset; i < strings.Length - 1; i++)
