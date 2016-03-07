@@ -15,7 +15,7 @@ namespace Parkwood.Obd
         private List<ObdPid> _desiredPids = new List<ObdPid>();
         private readonly Protocol _protocol;
         private State _state;
-        private List<ObdPid> targetPids;
+        private List<ObdPid> _targetPids = new List<ObdPid>();
 
         //todo: we know this is our protocol for testing; need a better discovery mechanism
         public ObdDevice(ObdPort port, Protocol protocol = Protocol.Iso157654Can11Bit500Kbaud)
@@ -36,7 +36,7 @@ namespace Parkwood.Obd
 
         private void Init()
         {
-            new List<string>() { "ATZ", "ATE0", "ATL0", "ATSP6", "ATH1" }.ForEach(x => System.Diagnostics.Debug.WriteLine(_port.SendCommand(x)));
+            new List<string>() { "ATZ", "ATE0", "ATL0", "ATSP6", "ATH1" }.ForEach(x => System.Diagnostics.Debug.WriteLine(_port.SendCommandWaitForString(x)));
         }
 
         private void Publish()
@@ -55,29 +55,19 @@ namespace Parkwood.Obd
         {
             _state = new State(new Dictionary<string, object>());
 
-            if (targetPids == null)
+            if (!_targetPids.Any())
             {
-                targetPids = new List<ObdPid>();
-
-                foreach (var ecu in _ecus)
-                {
-                    Logger.DebugWrite($"Attempting to join {_desiredPids.Count} desired PIDs with {ecu.Pidz.Count} supported PIDs for ECU {ecu.Id}");
-                    Logger.DebugWrite($"Desired: {string.Join(", ", _desiredPids.Select(x => x.Pid))}");
-                    Logger.DebugWrite($"Available: {string.Join(", ", ecu.Pidz.Select(x => x.Pid))}");
-                    targetPids.AddRange(ecu.Pidz.Where(y => _desiredPids.Select(x => x.Pid).Contains(y.Pid)));
-                }
-
-                Logger.DebugWrite($"Found {targetPids.Count} pids to ask for.");
+                BuildPidList();
             }
             try
             {
-                foreach (var pid in targetPids)
+                foreach (var pid in _targetPids)
                 {
-                    var pidVal = _port.SendCommand(pid.PidCommand);
-                    var parsedResult = PidDecoder.ParsePidCmd(pidVal, Protocol.Iso157654Can11Bit500Kbaud); //6
-                    //int,object - raw data
+                    var pidVal = _port.SendCommandWaitForString(pid.PidCommand);
+                    var parsedResult = PidDecoder.ParsePidCmd(pidVal, _protocol); //raw command - returns ECU dict key, byte array of values, strips ECU header
+                    //pid.RawData =
 
-                    //foreach byte array, create ObdPid --> call value --> 
+
 
                     if (_state.PidValues.ContainsKey(pid.Pid))
                     {
@@ -92,6 +82,22 @@ namespace Parkwood.Obd
             {
                 Logger.DebugWrite($"{ex.Message}: at {ex.StackTrace}");
             }
+        }
+
+        private void BuildPidList()
+        {
+            foreach (var ecu in _ecus)
+            {
+                Logger.DebugWrite($"Attempting to join {_desiredPids.Count} desired PIDs with {ecu.Pidz.Count} supported PIDs for ECU {ecu.Id}");
+                Logger.DebugWrite($"Desired: {string.Join(", ", _desiredPids.Select(x => x.Pid))}");
+                Logger.DebugWrite($"Available: {string.Join(", ", ecu.Pidz.Select(x => x.Pid))}");
+                //join is actually more cumbersome, at least at first glance. 
+                //_desiredPids.Join(ecu.Pidz, desired => desired.Pid, supported => supported.Pid, (desired, supported) => new ObdPid() { Formula = desired.Formula, Pid = desired.Pid, Mode = desired.Mode, Name = desired.Name });
+                //since our formulas were loaded from XML (_desiredPids), we'll select out of that list to preserve the extra data. should probably fix that at some point (E.g., not use ObdPid for GetSupportedPids)
+                _targetPids.AddRange(_desiredPids.Where(x => ecu.Pidz.Select(y => y.Pid).Contains(x.Pid)));
+            }
+
+            Logger.DebugWrite($"Found {_targetPids.Count} pids to ask for.");
         }
 
         private void PublishState()
@@ -136,7 +142,7 @@ namespace Parkwood.Obd
 
             foreach (var chunk in pidChunks)
             {
-                var pidGetResult = PidDecoder.ParsePidCmd(_port.SendCommand(new ObdPid() { Mode = "01", Pid = chunk }.PidCommand), _protocol).ToList();
+                var pidGetResult = PidDecoder.ParsePidCmd(_port.SendCommandWaitForString(new ObdPid() { Mode = "01", Pid = chunk }.PidCommand), _protocol).ToList();
                 foreach (var ecuLineResponse in pidGetResult)
                 {
                     var ecu = new ObdEcu();
@@ -167,10 +173,7 @@ namespace Parkwood.Obd
         {
             var xpids = XDocument.Load("Assets/WellKnownPids.xml");
             var pids = xpids.Element("Document").Elements("MessageType");
-
-            //todo: add function from XML
-            var pidsForMe = pids.Select(x => new ObdPid() { Mode = "01", Name = x.Element("Name").Value, Pid = x.Element("PID").Value }).ToList();
-            _desiredPids = pidsForMe;
+            _desiredPids = pids.Select(x => new ObdPid() { Mode = x.Element("Mode").Value, Name = x.Element("Name").Value, Pid = x.Element("PID").Value, Formula = x.Element("Formula").Value }).ToList();
         }
     }
 }

@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using Windows.Devices.Bluetooth.Advertisement;
 
 namespace Parkwood.Obd
 {
@@ -18,10 +16,13 @@ namespace Parkwood.Obd
         }
         public bool Connected { get; protected set; }
         
-        public abstract string SendCommand(string cmd);
+        public abstract string SendCommandWaitForString(string cmd);
 
-        public abstract Task<string> ReadResponse();
-        
+        public abstract byte[] SendCommandWaitForBytes(string cmd);
+
+        public abstract Task<string> ReadString();
+
+        public abstract Task<byte[]> ReadBytes();
     }
 }
 

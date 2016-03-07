@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.Devices.Bluetooth.Rfcomm;
@@ -43,45 +44,55 @@ namespace Parkwood.Obd.Port
             base.Connect();
         }
 
-        public override string SendCommand(string cmd)
+        public override string SendCommandWaitForString(string cmd)
         {
+            return Encoding.ASCII.GetString(SendCommandWaitForBytes(cmd));
+        }
+
+        public override byte[] SendCommandWaitForBytes(string cmd)
+        {
+            var eol = Encoding.ASCII.GetBytes(">").Single();
             var writer = new DataWriter(_socket.OutputStream);
             writer.WriteString(cmd + "\r\n");
             var bytesWritten = Task.Run(async () => await writer.StoreAsync()).Result;
             Logger.DebugWrite($"Wrote {bytesWritten} bytes: {cmd}");
             Task.Delay(500);
-            var data = new StringBuilder();
+            var data = new List<byte>();
             var done = false;
             while (!done)
             {
-                var response = Task.Run(async () => await ReadResponse()).Result;
-                data.Append(response);
-                done = response.Contains(">");
+                var response = Task.Run(async () => await ReadBytes()).Result;
+                data.AddRange(response);
+                done = response.Contains(eol);
             }
             writer.DetachStream();
-            return data.ToString();
+            return data.ToArray();
         }
 
-        public override async Task<string> ReadResponse()
+        public override async Task<string> ReadString()
         {
+            return Encoding.ASCII.GetString(await ReadBytes());
+        }
+
+        public override async Task<byte[]> ReadBytes()
+        {
+            //todo: would a response ever be more than 1kB? i don't think so, but know we should loop through the buffer if we get one larger. taking the assumption that won't happen.
+            const uint readBufferLength = 1024;
             try
             {
-                if (_socket.InputStream == null) return string.Empty;
-                const uint readBufferLength = 1024; //todo: would a response ever be more than 1kB? i don't think so, but know we should loop through the buffer if we get one larger. taking the assumption that won't happen.
+                if (_socket.InputStream == null) return null;
                 var reader = new DataReader(_socket.InputStream) { InputStreamOptions = InputStreamOptions.Partial };
-                var bytesRead = await reader.LoadAsync(readBufferLength);
+                var bytes = new byte[await reader.LoadAsync(readBufferLength)];
 
-                var response = reader.ReadString(bytesRead);
-                Logger.DebugWrite(response);
+                reader.ReadBytes(bytes);
                 reader.DetachStream();
-                return response;
+                return bytes;
             }
             catch (Exception ex)
             {
                 Logger.DebugWrite("ReadAsync: " + ex.Message);
             }
-            //reader.Dispose();
-            return string.Empty;
+            return null;
         }
 
         private async Task ConnectDeviceAsync(DeviceInformation pairedDevice)

@@ -16,12 +16,22 @@ namespace Parkwood.Test
 
     internal class TestObdPort : ObdPort
     {
-        public override string SendCommand(string cmd)
+        public override string SendCommandWaitForString(string cmd)
         {
-            return string.IsNullOrEmpty(cmd) ? "hello" : $"Received:{cmd}";
+            throw new NotImplementedException();
         }
 
-        public override Task<string> ReadResponse()
+        public override byte[] SendCommandWaitForBytes(string cmd)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override Task<string> ReadString()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override Task<byte[]> ReadBytes()
         {
             throw new NotImplementedException();
         }
@@ -53,7 +63,7 @@ namespace Parkwood.Test
             }
         }
 
-        public override string SendCommand(string cmd)
+        public override string SendCommandWaitForString(string cmd)
         {
             var command = cmd.Split(' ');
             var mode = command[0];
@@ -63,7 +73,17 @@ namespace Parkwood.Test
             return data[r.Next(data.Count - 1)]; //get a random data point
         }
 
-        public override Task<string> ReadResponse()
+        public override byte[] SendCommandWaitForBytes(string cmd)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override Task<string> ReadString()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override Task<byte[]> ReadBytes()
         {
             throw new NotImplementedException();
         }

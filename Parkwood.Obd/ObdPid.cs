@@ -14,17 +14,6 @@ namespace Parkwood.Obd
 
         public string PidCommand => $"{Mode} {Pid}";
 
-        public Func<byte[], string> Compute
-        {
-            get; set;
-        }
-
-        public string Value
-        {
-            get
-            {
-                return Compute(RawData);
-            }
-        }
+        public string Formula { get; set; }
     }
 }
