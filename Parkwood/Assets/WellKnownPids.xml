@@ -10,6 +10,7 @@
     <Max_value></Max_value>
     <Units></Units>
     <Formula></Formula>
+    <ConversionFunctionName></ConversionFunctionName>
   </MessageType>
   <MessageType>
     <Mode>01</Mode>
@@ -21,6 +22,7 @@
     <Max_value></Max_value>
     <Units></Units>
     <Formula></Formula>
+    <ConversionFunctionName></ConversionFunctionName>
   </MessageType>
   <MessageType>
     <Mode>01</Mode>
@@ -32,6 +34,7 @@
     <Max_value>100</Max_value>
     <Units>%</Units>
     <Formula>A*100/255</Formula>
+    <ConversionFunctionName></ConversionFunctionName>
   </MessageType>
   <MessageType>
     <Mode>01</Mode>
@@ -43,6 +46,7 @@
     <Max_value>215</Max_value>
     <Units>°C</Units>
     <Formula>A-40</Formula>
+    <ConversionFunctionName></ConversionFunctionName>
   </MessageType>
   <MessageType>
     <Mode>01</Mode>
@@ -54,6 +58,7 @@
     <Max_value>765</Max_value>
     <Units>kPa (gauge)</Units>
     <Formula>A*3</Formula>
+    <ConversionFunctionName></ConversionFunctionName>
   </MessageType>
   <MessageType>
     <Mode>01</Mode>
@@ -65,6 +70,7 @@
     <Max_value>255</Max_value>
     <Units>kPa (absolute)</Units>
     <Formula>A</Formula>
+    <ConversionFunctionName></ConversionFunctionName>
   </MessageType>
   <MessageType>
     <Mode>01</Mode>
@@ -76,6 +82,7 @@
     <Max_value>16,383.75</Max_value>
     <Units>rpm</Units>
     <Formula>((A*256)+B)/4</Formula>
+    <ConversionFunctionName></ConversionFunctionName>
   </MessageType>
   <MessageType>
     <Mode>01</Mode>
@@ -87,6 +94,7 @@
     <Max_value>255</Max_value>
     <Units>km/h</Units>
     <Formula>A</Formula>
+    <ConversionFunctionName></ConversionFunctionName>
   </MessageType>
   <MessageType>
     <Mode>01</Mode>
@@ -98,6 +106,7 @@
     <Max_value>63.5</Max_value>
     <Units>° relative to #1 cylinder</Units>
     <Formula>(A-128)/2</Formula>
+    <ConversionFunctionName></ConversionFunctionName>
   </MessageType>
   <MessageType>
     <Mode>01</Mode>
@@ -109,6 +118,7 @@
     <Max_value>215</Max_value>
     <Units>°C</Units>
     <Formula>A-40</Formula>
+    <ConversionFunctionName></ConversionFunctionName>
   </MessageType>
   <MessageType>
     <Mode>01</Mode>
@@ -120,6 +130,7 @@
     <Max_value>655.35</Max_value>
     <Units>grams/sec</Units>
     <Formula>((A*256)+B) / 100</Formula>
+    <ConversionFunctionName></ConversionFunctionName>
   </MessageType>
   <MessageType>
     <Mode>01</Mode>
@@ -131,5 +142,6 @@
     <Max_value>100</Max_value>
     <Units>%</Units>
     <Formula>A*100/255</Formula>
+    <ConversionFunctionName></ConversionFunctionName>
   </MessageType>
 </Document>

@@ -1,4 +1,8 @@
 ﻿using System;
+using System.Linq;
+using System.Reflection;
+using System.Text;
+using System.Xml.Linq;
 
 namespace Parkwood.Obd
 {
@@ -12,7 +16,7 @@ namespace Parkwood.Obd
 
         public string PidCommand => $"{Mode} {Pid}";
 
-        public string Formula { get; set; }
+        public string ConversionFunctionName { get; set; }
 
     }
 
@@ -25,9 +29,22 @@ namespace Parkwood.Obd
             Name = pid.Name;
             Mode = pid.Mode;
             Pid = pid.Pid;
-            Formula = pid.Formula;
+            ConversionFunctionName = pid.ConversionFunctionName;
         }
 
         public byte[] RawData { get; set; }
+
+        public string Value
+        {
+            //todo: LOL this is ridiculous
+            get
+            {
+                var undecodedValue = Encoding.ASCII.GetString(RawData);
+                var conversions = typeof(PidDecoder).GetMethods(BindingFlags.Public).Where(x => x.Name == ConversionFunctionName).ToList();
+                if (!conversions.Any() || conversions.Count > 1) { return undecodedValue; }
+                var conversion = conversions.Single();
+                return conversion.Invoke(null, new object[] { RawData }) as string;
+            }
+        }
     }
 }
