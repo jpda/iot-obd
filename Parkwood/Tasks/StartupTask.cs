@@ -14,10 +14,12 @@ namespace Parkwood.Tasks
             //used to hold process after this thread has moved past the publisher
             var deferral = taskInstance.GetDeferral();
 
+            //connect
             var btp = new ObdBluetoothPort("OBDLink MX");
             var provider = new ObdDevice(btp);
 
             var debug = new DebugSubscriber();
+
             var iot = new IotSubscriber();
 
             //subscribe
