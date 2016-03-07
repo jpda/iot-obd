@@ -57,7 +57,7 @@ namespace Parkwood.Obd.Port
         public override async Task<string> ReadResponse()
         {
             if (_socket.InputStream == null) return string.Empty;
-            const uint readBufferLength = 1024;
+            const uint readBufferLength = 1024; //todo: would a response ever be more than 1kB? i don't think so, but know we should loop through the buffer if we get one larger. taking the assumption that won't happen.
             var reader = new DataReader(_socket.InputStream) { InputStreamOptions = InputStreamOptions.Partial };
             var bytesRead = await reader.LoadAsync(readBufferLength);
             try

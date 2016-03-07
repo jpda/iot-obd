@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Xml.Linq;
 
 namespace Parkwood.Obd
@@ -16,11 +15,11 @@ namespace Parkwood.Obd
         private readonly Protocol _protocol;
         private State _state;
 
+        //todo: we know this is our protocol for testing; need a better discovery mechanism
         public ObdDevice(ObdPort port, Protocol protocol = Protocol.Iso157654Can11Bit500Kbaud)
         {
             _observers = new List<IObserver<State>>();
             _port = port;
-            //todo: how do we determine protocol? is that done via...?
             _protocol = protocol;
             _port.Connect();
         }
@@ -56,6 +55,7 @@ namespace Parkwood.Obd
 
             var targetPidList = new List<ObdPid>();
 
+            //todo: fix this to get an actual PID list
             foreach (var ecu in _ecus)
             {
                 targetPidList.AddRange(ecu.Pidz.Where(y => _desiredPids.Select(x => x.Pid).Contains(y.Pid)));
@@ -121,9 +121,9 @@ namespace Parkwood.Obd
                         ecu = ecus.Single(x => x.Id == ecuLineResponse.Key);
                     }
 
-                    var pidz = PidDecoder.DecodeSupportedPids(ecuLineResponse.Value, 0x00).Select(x => new ObdPid() { Mode = "01", Pid = x.ToString() }).ToList();
+                    var pidz = PidDecoder.DecodeSupportedPids(ecuLineResponse.Value, int.Parse(chunk)).Select(x => new ObdPid() { Mode = "01", Pid = x.ToString("00") }).ToList();
 
-                    if (ecu.Pidz == null ? false : ecu.Pidz.Any())
+                    if (ecu.Pidz?.Any() ?? false)
                     {
                         ecu.Pidz.AddRange(pidz);
                     }
