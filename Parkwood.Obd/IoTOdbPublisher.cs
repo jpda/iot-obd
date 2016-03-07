@@ -7,12 +7,11 @@ namespace Parkwood.Obd
     {
         private IDisposable _unsubscriber;
 
-        public IotSubscriber(string name)
+        public IotSubscriber()
         {
-            this.Name = name;
+           
         }
-
-        public string Name { get; }
+        
         public override void OnCompleted()
         {
             throw new NotImplementedException();

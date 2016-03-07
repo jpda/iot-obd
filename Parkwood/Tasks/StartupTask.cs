@@ -11,18 +11,20 @@ namespace Parkwood.Tasks
 
         public async void Run(IBackgroundTaskInstance taskInstance)
         {
+            //used to hold process after this thread has moved past the publisher
             var deferral = taskInstance.GetDeferral();
 
-            while (true)
-            {
-                var btp = new ObdBluetoothPort("OBDLink MX");
-                var provider = new ObdDevice(btp);
-                var debug = new DebugSubscriber();
+            var btp = new ObdBluetoothPort("OBDLink MX");
+            var provider = new ObdDevice(btp);
 
-                provider.Subscribe(debug);
-                provider.Startup();
-            }
+            var debug = new DebugSubscriber();
+            var iot = new IotSubscriber();
 
+            //subscribe
+            provider.Subscribe(debug);
+            provider.Subscribe(iot);
+
+            provider.Startup();
             deferral.Complete();
         }
 
