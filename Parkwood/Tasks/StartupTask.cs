@@ -18,11 +18,11 @@ namespace Parkwood.Tasks
             var provider = new ObdDevice(btp);
 
             var debug = new DebugSubscriber();
-            var iot = new IotSubscriber();
+            //var iot = new IotSubscriber();
 
             //subscribe
             provider.Subscribe(debug);
-            provider.Subscribe(iot);
+            //provider.Subscribe(iot);
 
             provider.Startup();
         }

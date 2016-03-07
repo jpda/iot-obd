@@ -12,6 +12,7 @@ namespace Parkwood.Obd
         }
 
         public string Name { get; }
+
         public override void OnCompleted()
         {
             throw new NotImplementedException();

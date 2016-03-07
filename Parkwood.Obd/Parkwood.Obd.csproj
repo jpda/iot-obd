@@ -114,15 +114,15 @@
     <Compile Include="ObdEcu.cs" />
     <Compile Include="ObdPid.cs" />
     <Compile Include="Extensions.cs" />
+    <Compile Include="StateSubscriber.cs" />
     <Compile Include="ObdDevice.cs" />
     <Compile Include="ObdException.cs" />
     <Compile Include="OBDPort.cs" />
     <Compile Include="Port\ObdBluetoothPort.cs" />
+    <Compile Include="Protocol.cs" />
     <Compile Include="ObdState.cs" />
     <Compile Include="PidDecoder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Protocol.cs" />
-    <Compile Include="StateSubscriber.cs" />
     <Compile Include="Unsubscriber.cs" />
     <EmbeddedResource Include="Properties\Parkwood.Obd.rd.xml" />
   </ItemGroup>
