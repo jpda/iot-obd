@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Parkwood.Obd
 {
-    public enum ObdProtocol
+    public enum Protocol
     {
         Unknown = -1,
         ElmAutomatic = 0,
