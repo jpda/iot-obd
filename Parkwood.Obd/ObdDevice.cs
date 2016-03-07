@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
+using Parkwood.Stuff;
 
 namespace Parkwood.Obd
 {
@@ -55,11 +56,15 @@ namespace Parkwood.Obd
 
             var targetPidList = new List<ObdPid>();
 
-            //todo: fix this to get an actual PID list
             foreach (var ecu in _ecus)
             {
+                Logger.DebugWrite($"Attempting to join {_desiredPids.Count} desired PIDs with {ecu.Pidz.Count} supported PIDs for ECU {ecu.Id}");
+                Logger.DebugWrite($"Desired: {string.Join(", ", _desiredPids)}");
+                Logger.DebugWrite($"Available: {string.Join(", ", ecu.Pidz)}");
                 targetPidList.AddRange(ecu.Pidz.Where(y => _desiredPids.Select(x => x.Pid).Contains(y.Pid)));
             }
+
+            Logger.DebugWrite($"Found {targetPidList.Count} pids to ask for.");
 
             foreach (var pid in targetPidList)
             {
