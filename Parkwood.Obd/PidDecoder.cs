@@ -126,7 +126,9 @@ namespace Parkwood.Obd
                 for (var i = offset; i < strings.Length - 1; i++)
                 {
                     if (!string.IsNullOrWhiteSpace(strings[i]) && !strings[i].Contains("STOPPED"))
+                    {
                         bytes[i - offset] = Convert.ToByte(strings[i].Trim(), 16);
+                    }
                 }
 
                 payload[Convert.ToInt32(strings[ecuByte].Trim(), 16)] = bytes;

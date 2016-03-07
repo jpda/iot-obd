@@ -1,4 +1,6 @@
-﻿namespace Parkwood.Obd
+﻿using System;
+
+namespace Parkwood.Obd
 {
     public struct ObdPid
     {
@@ -11,5 +13,18 @@
         public string Pid { get; set; }
 
         public string PidCommand => $"{Mode} {Pid}";
+
+        public Func<byte[], string> Compute
+        {
+            get; set;
+        }
+
+        public string Value
+        {
+            get
+            {
+                return Compute(RawData);
+            }
+        }
     }
 }

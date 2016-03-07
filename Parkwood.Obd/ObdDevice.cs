@@ -74,6 +74,11 @@ namespace Parkwood.Obd
                 foreach (var pid in targetPids)
                 {
                     var pidVal = _port.SendCommand(pid.PidCommand);
+                    var parsedResult = PidDecoder.ParsePidCmd(pidVal, Protocol.Iso157654Can11Bit500Kbaud); //6
+                    //int,object - raw data
+
+                    //foreach byte array, create ObdPid --> call value --> 
+
                     if (_state.PidValues.ContainsKey(pid.Pid))
                     {
                         _state.PidValues[pid.Pid] = pidVal;
@@ -163,6 +168,7 @@ namespace Parkwood.Obd
             var xpids = XDocument.Load("Assets/WellKnownPids.xml");
             var pids = xpids.Element("Document").Elements("MessageType");
 
+            //todo: add function from XML
             var pidsForMe = pids.Select(x => new ObdPid() { Mode = "01", Name = x.Element("Name").Value, Pid = x.Element("PID").Value }).ToList();
             _desiredPids = pidsForMe;
         }
