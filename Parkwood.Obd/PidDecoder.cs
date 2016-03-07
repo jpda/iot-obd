@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Parkwood.Obd
 {
@@ -80,7 +81,7 @@ namespace Parkwood.Obd
         public static int GetFuelType(byte[] obdData)
         {
             //Mode and Pid Request(0x01, 0x51);
-            return 100 * obdData[0] / 255; 
+            return 100 * obdData[0] / 255;
         }
 
         public static int GetOilTemperature(byte[] obdData)
@@ -92,20 +93,11 @@ namespace Parkwood.Obd
         public static Dictionary<int, byte[]> ParsePidCmd(string commandResult, Protocol protocol)
         {
             var payload = new Dictionary<int, byte[]>();
-            if (commandResult.Contains("NO DATA") || commandResult.Contains("ERROR"))
-            {
-                //commandResult is bad. Eject.   
-                return null;
-            }
-            //there maybe multiple lines to deal with
+            if (commandResult.Contains("NO DATA") || commandResult.Contains("ERROR")) { return null; }
+            
             var ecus = commandResult.Trim().Split('\r');
-
-            foreach (var ecuResponse in ecus)
+            foreach (var cleaned in from ecuResponse in ecus where !string.IsNullOrEmpty(ecuResponse) && ecuResponse != ">" select ecuResponse.Replace(">", string.Empty))
             {
-                if (string.IsNullOrEmpty(ecuResponse) || ecuResponse == ">") continue;
-
-                var cleaned = ecuResponse.Replace(">", string.Empty);
-
                 int offset;
                 int ecuByte;
 
