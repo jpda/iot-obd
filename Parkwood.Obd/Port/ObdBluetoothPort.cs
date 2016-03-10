@@ -56,7 +56,8 @@ namespace Parkwood.Obd.Port
             writer.WriteString(cmd + "\r\n");
             var bytesWritten = Task.Run(async () => await writer.StoreAsync()).Result;
             Logger.DebugWrite($"Wrote {bytesWritten} bytes: {cmd}");
-            Task.Delay(500);
+            ////todo: Do we need this delay?
+            //Task.Delay(500);
             var data = new List<byte>();
             var done = false;
             while (!done)
@@ -77,6 +78,7 @@ namespace Parkwood.Obd.Port
         public override async Task<byte[]> ReadBytes()
         {
             //todo: would a response ever be more than 1kB? i don't think so, but know we should loop through the buffer if we get one larger. taking the assumption that won't happen.
+            //http://www.elmelectronics.com/DSheets/ELM327DSF.pdf OBD buffer is 256 Byte RS232 Transmit buffer
             const uint readBufferLength = 1024;
             try
             {

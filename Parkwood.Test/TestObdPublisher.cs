@@ -8,7 +8,7 @@ namespace Parkwood.Test
     {
         public string State { get; set; }
 
-        public override void OnNext(State value)
+        public override void OnNext(ObdState value)
         {
             State = value.ToJson();
             Debug.WriteLine(value.ToJson());

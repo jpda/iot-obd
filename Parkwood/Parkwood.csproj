@@ -103,7 +103,6 @@
   <ItemGroup>
     <Compile Include="Configuration\ConfigurationManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <None Include="StartupTaskOld.csold" />
     <Compile Include="Tasks\StartupTask.cs" />
   </ItemGroup>
   <ItemGroup>

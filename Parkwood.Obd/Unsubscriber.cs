@@ -8,10 +8,10 @@ namespace Parkwood.Obd
 {
     internal class Unsubscriber : IDisposable
     {
-        private readonly List<IObserver<State>> _observers;
-        private readonly IObserver<State> _observer;
+        private readonly List<IObserver<ObdState>> _observers;
+        private readonly IObserver<ObdState> _observer;
 
-        public Unsubscriber(List<IObserver<State>> observers, IObserver<State> observer)
+        public Unsubscriber(List<IObserver<ObdState>> observers, IObserver<ObdState> observer)
         {
             _observers = observers;
             _observer = observer;

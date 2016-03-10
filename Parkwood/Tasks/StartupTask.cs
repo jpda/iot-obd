@@ -14,6 +14,7 @@ namespace Parkwood.Tasks
             //used to hold process after this thread has moved past the publisher
             var deferral = taskInstance.GetDeferral();
 
+            //todo: replace with confi setting builders: port type and ID data
             var btp = new ObdBluetoothPort("OBDLink MX");
             var provider = new ObdDevice(btp);
 
@@ -22,6 +23,7 @@ namespace Parkwood.Tasks
 
             //subscribe
             provider.Subscribe(debug);
+            //stop killing my flow. This is so borked. I am just going to run this on premiscees
             //provider.Subscribe(iot);
 
             provider.Startup();

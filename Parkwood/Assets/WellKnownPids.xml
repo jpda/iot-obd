@@ -1,18 +1,6 @@
 <?xml version="1.0" ?>
 <Document>
   <MessageType>
-    <Mode>09</Mode>
-    <PID>02</PID>
-    <Data_bytes_returned>2</Data_bytes_returned>
-    <Name>FuelSystemStatus</Name>
-    <Description>Fuel system status</Description>
-    <Min_value></Min_value>
-    <Max_value></Max_value>
-    <Units></Units>
-    <Formula></Formula>
-    <ConversionFunctionName></ConversionFunctionName>
-  </MessageType>
-  <MessageType>
     <Mode>01</Mode>
     <PID>03</PID>
     <Data_bytes_returned>2</Data_bytes_returned>
@@ -34,7 +22,7 @@
     <Max_value>100</Max_value>
     <Units>%</Units>
     <Formula>A*100/255</Formula>
-    <ConversionFunctionName></ConversionFunctionName>
+    <ConversionFunctionName>GetEngineLoad</ConversionFunctionName>
   </MessageType>
   <MessageType>
     <Mode>01</Mode>
@@ -46,7 +34,7 @@
     <Max_value>215</Max_value>
     <Units>°C</Units>
     <Formula>A-40</Formula>
-    <ConversionFunctionName></ConversionFunctionName>
+    <ConversionFunctionName>GetEngineCoolantTemperature</ConversionFunctionName>
   </MessageType>
   <MessageType>
     <Mode>01</Mode>
@@ -82,7 +70,7 @@
     <Max_value>16,383.75</Max_value>
     <Units>rpm</Units>
     <Formula>((A*256)+B)/4</Formula>
-    <ConversionFunctionName></ConversionFunctionName>
+    <ConversionFunctionName>GetRpm</ConversionFunctionName>
   </MessageType>
   <MessageType>
     <Mode>01</Mode>
@@ -94,7 +82,7 @@
     <Max_value>255</Max_value>
     <Units>km/h</Units>
     <Formula>A</Formula>
-    <ConversionFunctionName></ConversionFunctionName>
+    <ConversionFunctionName>GetKilometersPerHour</ConversionFunctionName>
   </MessageType>
   <MessageType>
     <Mode>01</Mode>
@@ -118,7 +106,7 @@
     <Max_value>215</Max_value>
     <Units>°C</Units>
     <Formula>A-40</Formula>
-    <ConversionFunctionName></ConversionFunctionName>
+    <ConversionFunctionName>GetIntakeAirTemperature</ConversionFunctionName>
   </MessageType>
   <MessageType>
     <Mode>01</Mode>
@@ -130,7 +118,7 @@
     <Max_value>655.35</Max_value>
     <Units>grams/sec</Units>
     <Formula>((A*256)+B) / 100</Formula>
-    <ConversionFunctionName></ConversionFunctionName>
+    <ConversionFunctionName>GetMassAirflowRate</ConversionFunctionName>
   </MessageType>
   <MessageType>
     <Mode>01</Mode>
@@ -142,6 +130,7 @@
     <Max_value>100</Max_value>
     <Units>%</Units>
     <Formula>A*100/255</Formula>
-    <ConversionFunctionName></ConversionFunctionName>
+    <ConversionFunctionName>GetThrottlePosition</ConversionFunctionName>
   </MessageType>
+  
 </Document>

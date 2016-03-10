@@ -110,6 +110,7 @@
   <ItemGroup>
     <Compile Include="AzureIoTHub.cs" />
     <Compile Include="DebugSubscriber.cs" />
+    <Compile Include="EcuResponse.cs" />
     <Compile Include="IotSubscriber.cs" />
     <Compile Include="ObdEcu.cs" />
     <Compile Include="ObdPid.cs" />

@@ -4,7 +4,7 @@ namespace Parkwood.Obd
 {
     public class DebugSubscriber : StateSubscriber
     {
-        public override void OnNext(State value)
+        public override void OnNext(ObdState value)
         {
             Logger.DebugWrite(value.ToJson());
         }

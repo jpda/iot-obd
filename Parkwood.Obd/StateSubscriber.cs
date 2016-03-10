@@ -3,7 +3,7 @@ using Parkwood.Stuff;
 
 namespace Parkwood.Obd
 {
-    public abstract class StateSubscriber : IObserver<State>
+    public abstract class StateSubscriber : IObserver<ObdState>
     {
         public virtual void OnCompleted()
         {
@@ -15,6 +15,6 @@ namespace Parkwood.Obd
             Logger.DebugWrite($"Subscriber error: {error.Message}");
         }
 
-        public abstract void OnNext(State value);
+        public abstract void OnNext(ObdState value);
     }
 }
