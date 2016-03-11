@@ -6,7 +6,8 @@ namespace Parkwood.Obd
     {
         public override async void OnNext(ObdState value)
         {
-                await AzureIoTHub.SendDeviceToCloudMessageAsync(value.ToJson());
+            var message = value.ToJson();
+                await AzureIoTHub.SendDeviceToCloudMessageAsync(message);
             }
     }
 }

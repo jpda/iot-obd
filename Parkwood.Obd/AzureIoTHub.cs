@@ -9,9 +9,7 @@ static class AzureIoTHub
     // Note: this connection string is specific to the device "JackPiDevice". To configure other devices,
     // see information on iothub-explorer at http://aka.ms/iothubgetstartedVSCS
     //
-    const string deviceConnectionString = "HostName=Parkwood-Iot-Hub.azure-devices.net;DeviceId=JackPiDevice;SharedAccessKey=XIF7GR08aUiYRCxPMGjSX7OnlrRKN88vpb8MhaPguXs=";
-
-    //
+    const string deviceConnectionString = "HostName=Parkwood-Iot-Hub.azure-devices.net;DeviceId=JackPi;SharedAccessSignature=SharedAccessSignature sr=Parkwood-Iot-Hub.azure-devices.net%2fdevices%2fJackPi&sig=dmKmM%2fthvB6kKA3zcmYn8e5xbHNx6Lf%2b%2f2GpjR1GSBg%3d&se=1489271958";
     // To monitor messages sent to device "JackPiDevice" use iothub-explorer as follows:
     //    iothub-explorer HostName=Parkwood-Iot-Hub.azure-devices.net;SharedAccessKeyName=service;SharedAccessKey=IUTsaqV29Vzbthv1XKnbQXOmlogcCef0roq2cztwjrE= monitor-events "JackPiDevice"
     //
@@ -21,9 +19,8 @@ static class AzureIoTHub
     public static async Task SendDeviceToCloudMessageAsync(string message)
     {
         var deviceClient = DeviceClient.CreateFromConnectionString(deviceConnectionString, TransportType.Http1);
-    
+        await deviceClient.OpenAsync();
         var enc_message = new Message(Encoding.ASCII.GetBytes(message));
-
         await deviceClient.SendEventAsync(enc_message);
     }
 
