@@ -19,12 +19,12 @@ namespace Parkwood.Tasks
             var provider = new ObdDevice(btp);
 
             var debug = new DebugSubscriber();
-            //var iot = new IotSubscriber();
+            var iot = new IotSubscriber();
 
             //subscribe
             provider.Subscribe(debug);
             //stop killing my flow. This is so borked. I am just going to run this on premiscees
-            //provider.Subscribe(iot);
+            provider.Subscribe(iot);
 
             provider.Startup();
         }
