@@ -1,2 +1,2 @@
-MainPackage=C:\Users\jackbrad\Documents\Visual Studio 2015\Projects\Parkwood\Parkwood\bin\ARM\Debug\Parkwood_1.0.1.0_ARM_Debug.appx
-SymbolPackage=C:\Users\jackbrad\Documents\Visual Studio 2015\Projects\Parkwood\Parkwood\AppPackages\Parkwood_1.0.1.0_Debug_Test\Parkwood_1.0.1.0_ARM_Debug.appxsym
+MainPackage=E:\code\git\Parkwood\Parkwood\bin\x86\Release\arm\Parkwood\Parkwood_1.0.2.0_arm.appx
+SymbolPackage=E:\code\git\Parkwood\Parkwood\AppPackages\Parkwood_1.0.2.0_Test\Parkwood_1.0.2.0_arm.appxsym

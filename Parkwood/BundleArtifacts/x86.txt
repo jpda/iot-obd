@@ -1,0 +1,2 @@
+MainPackage=E:\code\git\Parkwood\Parkwood\bin\x86\Release\Parkwood_1.0.2.0_x86.appx
+SymbolPackage=E:\code\git\Parkwood\Parkwood\AppPackages\Parkwood_1.0.2.0_Test\Parkwood_1.0.2.0_x86.appxsym
