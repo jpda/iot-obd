@@ -11,10 +11,9 @@ namespace Parkwood.Obd
     public class EcuResponse
     {
         public ObdPid Pid { get; set; }
-
         public EcuResponse(ObdPid pid)
         {
-            this.Pid = pid;
+            Pid = pid;
         }
         public DateTime RawValueSetTime;
         private byte[] RawData;
@@ -29,7 +28,9 @@ namespace Parkwood.Obd
                 var result = conversion.Invoke(null, new object[] { RawData }).ToString();
                 return result;
             }
-        } 
+        }
+
+        public string RawStringData;
 
         /// <summary>
         /// Null when the pid has not been requested from the computer. 
@@ -43,8 +44,8 @@ namespace Parkwood.Obd
             set
             {
 
-               RawData = value;
-               RawValueSetTime = DateTime.Now;
+                RawData = value;
+                RawValueSetTime = DateTime.Now;
             }
         }
     }

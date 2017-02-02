@@ -8,7 +8,6 @@ using Windows.Networking.Sockets;
 using Windows.Storage.Streams;
 using Parkwood.Stuff;
 using System.Text;
-using Windows.Devices.Bluetooth;
 
 namespace Parkwood.Obd.Port
 {
@@ -47,7 +46,23 @@ namespace Parkwood.Obd.Port
 
         public override string SendCommandWaitForString(string cmd)
         {
-            return Encoding.ASCII.GetString(SendCommandWaitForBytes(cmd));
+            var eol = ">";
+            var writer = new DataWriter(_socket.OutputStream);
+            writer.WriteString(cmd + "\r\n");
+            var bytesWritten = Task.Run(async () => await writer.StoreAsync()).Result;
+            Logger.DebugWrite($"Wrote {bytesWritten} bytes: {cmd}");
+            ////todo: Do we need this delay?
+            //Task.Delay(500);
+            var done = false;
+            var data = string.Empty;
+            while (!done)
+            {
+                var response = Task.Run(async () => await ReadString()).Result;
+                data = data + response;
+                done = response.Contains(eol);
+            }
+            writer.DetachStream();
+            return data;
         }
 
         public override byte[] SendCommandWaitForBytes(string cmd)
@@ -71,15 +86,13 @@ namespace Parkwood.Obd.Port
             return data.ToArray();
         }
 
-        public override async Task<string> ReadString()
-        {
-            return Encoding.ASCII.GetString(await ReadBytes());
-        }
+        //public override async Task<string> ReadString()
+        //{
+        //    return Encoding.ASCII.GetString(await ReadBytes());
+        //}
 
         public override async Task<byte[]> ReadBytes()
         {
-            //todo: would a response ever be more than 1kB? i don't think so, but know we should loop through the buffer if we get one larger. taking the assumption that won't happen.
-            //http://www.elmelectronics.com/DSheets/ELM327DSF.pdf OBD buffer is 256 Byte RS232 Transmit buffer
             const uint readBufferLength = 1024;
             try
             {
@@ -96,6 +109,30 @@ namespace Parkwood.Obd.Port
                 Logger.DebugWrite("ReadAsync: " + ex.Message);
             }
             return null;
+        }
+
+        public override async Task<string> ReadString()
+        {
+            uint readBufferLength = 1024;
+            var reader = new DataReader(_socket.InputStream) { InputStreamOptions = InputStreamOptions.Partial };
+            var loadAsyncTask = reader.LoadAsync(readBufferLength).AsTask();
+
+            // Launch the task and wait
+            UInt32 bytesRead = await loadAsyncTask;
+            if (bytesRead > 0)
+            {
+                try
+                {
+                    string recvdtxt = reader.ReadString(bytesRead);
+                    System.Diagnostics.Debug.WriteLine(recvdtxt);
+                    return recvdtxt;
+                }
+                catch (Exception ex)
+                {
+                    Logger.DebugWrite("ReadAsync: " + ex.Message);
+                }
+            }
+            return "";
         }
 
         private async Task ConnectDeviceAsync(DeviceInformation pairedDevice)

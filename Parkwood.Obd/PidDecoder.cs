@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using Windows.Devices.Bluetooth.Advertisement;
+using System.Globalization;
 
 namespace Parkwood.Obd
 {
@@ -14,7 +15,7 @@ namespace Parkwood.Obd
             if (commandResult.Contains("NO DATA") || commandResult.Contains("ERROR")) { return null; }
 
             var ecus = commandResult.Trim().Split('\r');
-            
+
             foreach (var cleaned in from ecuResponse in ecus where !string.IsNullOrEmpty(ecuResponse) && ecuResponse != ">" select ecuResponse.Replace(">", string.Empty))
             {
                 int offset;
@@ -54,6 +55,67 @@ namespace Parkwood.Obd
             }
 
             return payload;
+        }
+        private static int ParseString(string str, int bytes)
+        {
+            return int.Parse(str.Substring(4, bytes * 2), NumberStyles.HexNumber);
+        }
+        //lifted from mydriving aka.ms/mydriving
+        public static string ParseObd01Msg(string input)
+        {
+            string str = input.Replace("\r", "").Replace("\n", "").Replace(" ", "").Replace(">", "").Trim();
+            if (!str.StartsWith("41") || str.Length < 6)
+                return "-255";
+            string pid = str.Substring(2, 2);
+            int result;
+            switch (pid)
+            {
+                case "04": //EngineLoad
+                    return (ParseString(str, 1) * 100 / 255).ToString();
+                case "06": //ShortTermFuelBank1
+                    return ((ParseString(str, 1) - 128) * 100 / 128).ToString();
+                case "07": //LongTermFuelBank1
+                    return ((ParseString(str, 1) - 128) * 100 / 128).ToString();
+                case "0C": //RPM
+                    result = (ParseString(str, 2) / 4);
+                    if (result < 0 || result > 16383)
+                        result = -255;
+                    return result.ToString();
+                case "0D": //Speed
+                    result = ParseString(str, 1);
+                    if (result < 0 || result > 255)
+                        result = -255;
+                    return result.ToString();
+                case "0F": //InsideTemperature
+                    return (ParseString(str, 1) - 40).ToString();
+                case "10": //MAF air flow rate
+                    result = (ParseString(str, 2) / 100);
+                    if (result < 0 || result > 655)
+                        result = -255;
+                    return result.ToString();
+                case "11": //Throttle position
+                    return (ParseString(str, 1) * 100 / 255).ToString();
+                case "1F": //Runtime 
+                    return ParseString(str, 2).ToString();
+                case "21": //DistancewithML  
+                    return ParseString(str, 2).ToString();
+                case "2C": //Commanded EGR
+                    return (ParseString(str, 1) * 100 / 255).ToString();
+                case "2D": //EGR Error
+                    return ((ParseString(str, 1) - 128) * 100 / 128).ToString();
+                case "33": //BarometricPressure
+                    return ParseString(str, 1).ToString();
+                case "45": //Relative throttle position
+                    return (ParseString(str, 1) * 100 / 255).ToString();
+                case "46": //OutsideTemperature
+                    return (ParseString(str, 1) - 40).ToString();
+                case "5E": //EngineFuelRate
+                    result = (ParseString(str, 2) / 20);
+                    if (result < 0 || result > 3212)
+                        result = -255;
+                    return result.ToString();
+            }
+            return "ERROR";
         }
 
         public static IEnumerable<int> DecodeSupportedPids(IReadOnlyList<byte> data, int offset)
@@ -161,6 +223,6 @@ namespace Parkwood.Obd
         }
 
         #endregion
-     
+
     }
 }
