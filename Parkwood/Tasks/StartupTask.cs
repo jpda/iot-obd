@@ -17,7 +17,7 @@ namespace Parkwood.Tasks
 
             //todo: replace with confi setting builders: port type and ID data
             Logger.DebugWrite("Trying to connect...");
-            var btp = new ObdBluetoothPort("OBDII");
+            var btp = new ObdBluetoothPort("Port");
             var provider = new ObdDevice(btp);
 
             var debug = new DebugSubscriber();
