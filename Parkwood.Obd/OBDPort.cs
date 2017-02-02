@@ -5,9 +5,10 @@ namespace Parkwood.Obd
 {
     public abstract class ObdPort
     {
-        public virtual void Connect()
+        public async virtual Task Connect()
         {
             Connected = true;
+            return;
         }
 
         public virtual void Disconnect()

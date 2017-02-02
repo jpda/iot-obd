@@ -26,13 +26,13 @@ namespace Parkwood.Obd.Port
         {
             try
             {
-                var devices = Task.Run(async () => await DeviceInformation.FindAllAsync(RfcommDeviceService.GetDeviceSelector(RfcommServiceId.SerialPort))).Result;
+                var devices = await DeviceInformation.FindAllAsync(RfcommDeviceService.GetDeviceSelector(RfcommServiceId.SerialPort));
                 var device = devices.Where(x => x.Name.ToLower().Contains(_deviceName.ToLower())).ToList();
 
                 if (!device.Any())
                 {
                     Logger.DebugWrite("No devices found");
-                    return Task.FromResult(null);
+                    return;
                 }
 
                 await ConnectDeviceAsync(device.Single());

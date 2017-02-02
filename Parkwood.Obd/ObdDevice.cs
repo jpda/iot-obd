@@ -24,7 +24,6 @@ namespace Parkwood.Obd
             _observers = new List<IObserver<ObdState>>();
             _port = port;
             _protocol = protocol;
-            
         }
 
         public async Task Connect()
@@ -32,11 +31,11 @@ namespace Parkwood.Obd
             do
             {
                 await _port.Connect();
-                if (_port.Connected) { return Task.FromResult(null); } //if we manage to connect, let's roll - otherwise, we'll delay
+                if (_port.Connected) { return; } //if we manage to connect, let's roll - otherwise, we'll delay
                 Logger.DebugWrite("Can't connect to OBD device! Sleeping for a few...");
-                Task.Delay(5000).Wait();
+                await Task.Delay(5000);
             } while (!_port.Connected);
-        } 
+        }
 
         public void Startup()
         {
