@@ -1,0 +1,136 @@
+<?xml version="1.0" ?>
+<Document>
+  <MessageType>
+    <Mode>01</Mode>
+    <PID>03</PID>
+    <Data_bytes_returned>2</Data_bytes_returned>
+    <Name>FuelSystemStatus</Name>
+    <Description>Fuel system status</Description>
+    <Min_value></Min_value>
+    <Max_value></Max_value>
+    <Units></Units>
+    <Formula></Formula>
+    <ConversionFunctionName></ConversionFunctionName>
+  </MessageType>
+  <MessageType>
+    <Mode>01</Mode>
+    <PID>04</PID>
+    <Name>CalculatedEngineLoad</Name>
+    <Data_bytes_returned>1</Data_bytes_returned>
+    <Description>Calculated engine load value</Description>
+    <Min_value>0</Min_value>
+    <Max_value>100</Max_value>
+    <Units>%</Units>
+    <Formula>A*100/255</Formula>
+    <ConversionFunctionName>GetEngineLoad</ConversionFunctionName>
+  </MessageType>
+  <MessageType>
+    <Mode>01</Mode>
+    <PID>05</PID>
+    <Name>EngineCoolantTemperature</Name>
+    <Data_bytes_returned>1</Data_bytes_returned>
+    <Description>Engine coolant temperature</Description>
+    <Min_value>-40</Min_value>
+    <Max_value>215</Max_value>
+    <Units>°C</Units>
+    <Formula>A-40</Formula>
+    <ConversionFunctionName>GetEngineCoolantTemperature</ConversionFunctionName>
+  </MessageType>
+  <MessageType>
+    <Mode>01</Mode>
+    <PID>0A</PID>
+    <Name>FuelPressure</Name>
+    <Data_bytes_returned>1</Data_bytes_returned>
+    <Description>Fuel pressure</Description>
+    <Min_value>0</Min_value>
+    <Max_value>765</Max_value>
+    <Units>kPa (gauge)</Units>
+    <Formula>A*3</Formula>
+    <ConversionFunctionName></ConversionFunctionName>
+  </MessageType>
+  <MessageType>
+    <Mode>01</Mode>
+    <PID>0B</PID>
+    <Name>IntakeMAP</Name>
+    <Data_bytes_returned>1</Data_bytes_returned>
+    <Description>Intake manifold absolute pressure</Description>
+    <Min_value>0</Min_value>
+    <Max_value>255</Max_value>
+    <Units>kPa (absolute)</Units>
+    <Formula>A</Formula>
+    <ConversionFunctionName></ConversionFunctionName>
+  </MessageType>
+  <MessageType>
+    <Mode>01</Mode>
+    <PID>0C</PID>
+    <Name>RPM</Name>
+    <Data_bytes_returned>2</Data_bytes_returned>
+    <Description>Engine RPM</Description>
+    <Min_value>0</Min_value>
+    <Max_value>16,383.75</Max_value>
+    <Units>rpm</Units>
+    <Formula>((A*256)+B)/4</Formula>
+    <ConversionFunctionName>GetRpm</ConversionFunctionName>
+  </MessageType>
+  <MessageType>
+    <Mode>01</Mode>
+    <PID>0D</PID>
+    <Name>Speed</Name>
+    <Data_bytes_returned>1</Data_bytes_returned>
+    <Description>Vehicle speed</Description>
+    <Min_value>0</Min_value>
+    <Max_value>255</Max_value>
+    <Units>km/h</Units>
+    <Formula>A</Formula>
+    <ConversionFunctionName>GetKilometersPerHour</ConversionFunctionName>
+  </MessageType>
+  <MessageType>
+    <Mode>01</Mode>
+    <PID>0E</PID>
+    <Name>TimingAdvance</Name>
+    <Data_bytes_returned>1</Data_bytes_returned>
+    <Description>Timing advance</Description>
+    <Min_value>-64</Min_value>
+    <Max_value>63.5</Max_value>
+    <Units>° relative to #1 cylinder</Units>
+    <Formula>(A-128)/2</Formula>
+    <ConversionFunctionName></ConversionFunctionName>
+  </MessageType>
+  <MessageType>
+    <Mode>01</Mode>
+    <PID>0F</PID>
+    <Name>IntakeAirTemp</Name>
+    <Data_bytes_returned>1</Data_bytes_returned>
+    <Description>Intake air temperature</Description>
+    <Min_value>-40</Min_value>
+    <Max_value>215</Max_value>
+    <Units>°C</Units>
+    <Formula>A-40</Formula>
+    <ConversionFunctionName>GetIntakeAirTemperature</ConversionFunctionName>
+  </MessageType>
+  <MessageType>
+    <Mode>01</Mode>
+    <PID>10</PID>
+    <Name>MAFAirFlowRate</Name>
+    <Data_bytes_returned>2</Data_bytes_returned>
+    <Description>MAF air flow rate</Description>
+    <Min_value>0</Min_value>
+    <Max_value>655.35</Max_value>
+    <Units>grams/sec</Units>
+    <Formula>((A*256)+B) / 100</Formula>
+    <ConversionFunctionName>GetMassAirflowRate</ConversionFunctionName>
+  </MessageType>
+  <MessageType>
+    <Mode>01</Mode>
+    <PID>11</PID>
+    <Name>ThrottlePosition</Name>
+    <Data_bytes_returned>1</Data_bytes_returned>
+    <Description>Throttle position</Description>
+    <Min_value>0</Min_value>
+    <Max_value>100</Max_value>
+    <Units>%</Units>
+    <Formula>A*100/255</Formula>
+    <ConversionFunctionName>GetThrottlePosition</ConversionFunctionName>
+  </MessageType>
+  
+</Document>

@@ -8,6 +8,7 @@ using Windows.Networking.Sockets;
 using Windows.Storage.Streams;
 using Parkwood.Stuff;
 using System.Text;
+using Windows.Devices.Bluetooth;
 
 namespace Parkwood.Obd.Port
 {
