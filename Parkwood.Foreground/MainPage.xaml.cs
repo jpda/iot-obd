@@ -31,12 +31,13 @@ namespace Parkwood.Foreground
             Startup();
         }
 
-        public void Startup()
+        public async void Startup()
         {
             //todo: replace with confi setting builders: port type and ID data
             Logger.DebugWrite("Trying to connect...");
             var btp = new ObdBluetoothPort("Port");
             var provider = new ObdDevice(btp);
+            await provider.Connect();
 
             var debug = new DebugSubscriber();
             var iot = new IotSubscriber("iot-obd.azure-devices.net", "rpi3audi", "v2mjgQbzYCc0vuImro+rMDl0DieCFx0Hc0CdKEY+dUY=");

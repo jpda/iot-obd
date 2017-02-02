@@ -22,7 +22,7 @@ namespace Parkwood.Obd.Port
             _deviceName = deviceName;
         }
 
-        public override void Connect()
+        public override async Task Connect()
         {
             try
             {
@@ -32,16 +32,16 @@ namespace Parkwood.Obd.Port
                 if (!device.Any())
                 {
                     Logger.DebugWrite("No devices found");
-                    return;
+                    return Task.FromResult(null);
                 }
 
-                Task.Run(async () => await ConnectDeviceAsync(device.Single())).Wait();
+                await ConnectDeviceAsync(device.Single());
             }
             catch (Exception ex)
             {
                 Logger.DebugWrite(ex.Message);
             }
-            base.Connect();
+            await base.Connect();
         }
 
         public override string SendCommandWaitForString(string cmd)
@@ -101,7 +101,7 @@ namespace Parkwood.Obd.Port
         {
             try
             {
-                _service = Task.Run(async () => await RfcommDeviceService.FromIdAsync(pairedDevice.Id)).Result;
+                _service = await RfcommDeviceService.FromIdAsync(pairedDevice.Id);
 
                 //todo: dispose in case it exists? not sure, really
                 _socket?.Dispose();
