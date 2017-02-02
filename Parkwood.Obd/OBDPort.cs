@@ -15,7 +15,7 @@ namespace Parkwood.Obd
             Connected = false;
         }
         public bool Connected { get; protected set; }
-        
+
         public abstract string SendCommandWaitForString(string cmd);
 
         public abstract byte[] SendCommandWaitForBytes(string cmd);

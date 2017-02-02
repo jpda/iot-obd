@@ -1,15 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.24720.0
+# Visual Studio 15
+VisualStudioVersion = 15.0.26127.3
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Parkwood", "Parkwood\Parkwood.csproj", "{B0B44A47-CCFE-4FBA-92E0-A970612DB06B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Parkwood.Stuff", "Parkwood.Stuff\Parkwood.Stuff.csproj", "{CBE6BA47-B460-47CB-8346-E8455B8E62BE}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Parkwood.Obd", "Parkwood.Obd\Parkwood.Obd.csproj", "{B7B4137D-9A70-4F99-8D5F-D9486BB97970}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Parkwood.Test", "Parkwood.Test\Parkwood.Test.csproj", "{C83250FA-B753-4535-BF86-426057B6A17A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -75,26 +73,6 @@ Global
 		{B7B4137D-9A70-4F99-8D5F-D9486BB97970}.Release|x64.Build.0 = Release|x64
 		{B7B4137D-9A70-4F99-8D5F-D9486BB97970}.Release|x86.ActiveCfg = Release|x86
 		{B7B4137D-9A70-4F99-8D5F-D9486BB97970}.Release|x86.Build.0 = Release|x86
-		{C83250FA-B753-4535-BF86-426057B6A17A}.Debug|Any CPU.ActiveCfg = Debug|x86
-		{C83250FA-B753-4535-BF86-426057B6A17A}.Debug|ARM.ActiveCfg = Debug|ARM
-		{C83250FA-B753-4535-BF86-426057B6A17A}.Debug|ARM.Build.0 = Debug|ARM
-		{C83250FA-B753-4535-BF86-426057B6A17A}.Debug|ARM.Deploy.0 = Debug|ARM
-		{C83250FA-B753-4535-BF86-426057B6A17A}.Debug|x64.ActiveCfg = Debug|x64
-		{C83250FA-B753-4535-BF86-426057B6A17A}.Debug|x64.Build.0 = Debug|x64
-		{C83250FA-B753-4535-BF86-426057B6A17A}.Debug|x64.Deploy.0 = Debug|x64
-		{C83250FA-B753-4535-BF86-426057B6A17A}.Debug|x86.ActiveCfg = Debug|x86
-		{C83250FA-B753-4535-BF86-426057B6A17A}.Debug|x86.Build.0 = Debug|x86
-		{C83250FA-B753-4535-BF86-426057B6A17A}.Debug|x86.Deploy.0 = Debug|x86
-		{C83250FA-B753-4535-BF86-426057B6A17A}.Release|Any CPU.ActiveCfg = Release|x86
-		{C83250FA-B753-4535-BF86-426057B6A17A}.Release|ARM.ActiveCfg = Release|ARM
-		{C83250FA-B753-4535-BF86-426057B6A17A}.Release|ARM.Build.0 = Release|ARM
-		{C83250FA-B753-4535-BF86-426057B6A17A}.Release|ARM.Deploy.0 = Release|ARM
-		{C83250FA-B753-4535-BF86-426057B6A17A}.Release|x64.ActiveCfg = Release|x64
-		{C83250FA-B753-4535-BF86-426057B6A17A}.Release|x64.Build.0 = Release|x64
-		{C83250FA-B753-4535-BF86-426057B6A17A}.Release|x64.Deploy.0 = Release|x64
-		{C83250FA-B753-4535-BF86-426057B6A17A}.Release|x86.ActiveCfg = Release|x86
-		{C83250FA-B753-4535-BF86-426057B6A17A}.Release|x86.Build.0 = Release|x86
-		{C83250FA-B753-4535-BF86-426057B6A17A}.Release|x86.Deploy.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

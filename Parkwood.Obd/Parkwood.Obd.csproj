@@ -105,7 +105,6 @@
   <ItemGroup>
     <!-- A reference to the entire .Net Framework and Windows SDK are automatically included -->
     <None Include="project.json" />
-    <None Include="Service References\Parkwood-Iot-Hub\ConnectedService.json" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AzureIoTHub.cs" />

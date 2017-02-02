@@ -2,6 +2,7 @@
 using System.Threading;
 using Parkwood.Obd;
 using Parkwood.Obd.Port;
+using Parkwood.Stuff;
 
 namespace Parkwood.Tasks
 {
@@ -15,11 +16,12 @@ namespace Parkwood.Tasks
             var deferral = taskInstance.GetDeferral();
 
             //todo: replace with confi setting builders: port type and ID data
-            var btp = new ObdBluetoothPort("OBDLink MX");
+            Logger.DebugWrite("Trying to connect...");
+            var btp = new ObdBluetoothPort("OBDII");
             var provider = new ObdDevice(btp);
 
             var debug = new DebugSubscriber();
-            var iot = new IotSubscriber();
+            var iot = new IotSubscriber("iot-obd.azure-devices.net", "rpi3audi", "v2mjgQbzYCc0vuImro+rMDl0DieCFx0Hc0CdKEY+dUY=");
 
             //subscribe
             provider.Subscribe(debug);
@@ -28,6 +30,5 @@ namespace Parkwood.Tasks
 
             provider.Startup();
         }
-
     }
 }
