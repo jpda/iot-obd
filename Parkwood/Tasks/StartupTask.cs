@@ -21,16 +21,11 @@ namespace Parkwood.Tasks
             var provider = new ObdDevice(btp);
 
             var debug = new DebugSubscriber();
-            var iot = new IotSubscriber("iot-obd.azure-devices.net", "rpi3audi", "v2mjgQbzYCc0vuImro+rMDl0DieCFx0Hc0CdKEY+dUY=");
+            var iot = new IotSubscriber("<YOUR IOT HUB>", "<IOT HUB DEVICE NAME>", "<HUB DEVICE KEY>");
 
-            //subscribe
             provider.Subscribe(debug);
-            //stop killing my flow. This is so borked. I am just going to run this on premiscees
             provider.Subscribe(iot);
-
             provider.Startup();
         }
     }
-
-    
 }
