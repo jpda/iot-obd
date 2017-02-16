@@ -31,7 +31,7 @@ namespace Parkwood.Foreground
             await provider.Connect();
 
             var debug = new DebugSubscriber();
-            var iot = new IotSubscriber("iot-obd.azure-devices.net", "rpi3audi", "v2mjgQbzYCc0vuImro+rMDl0DieCFx0Hc0CdKEY+dUY=");
+            var iot = new IotSubscriber("<YOUR IOT HUB NAME>", "<YOUR DEVICE>", "<YOUR DEVICE KEY>");
 
             provider.Subscribe(debug);
             provider.Subscribe(iot);
